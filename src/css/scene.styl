@@ -1,0 +1,18 @@
+/**/
+
+.scene
+    position absolute
+    &.isometric
+        background #ddd
+        transform-origin top left
+        transform rotate(-45deg) skew(19deg, 19deg)
+    &.debug
+        // background url("img/scene/grid.png") repeat -0.25px -0.25px
+        background-size 32px 32px
+        &>.name
+            height 32px
+            line-height 32px
+            padding 0 9px
+            position absolute
+            bottom 0
+            left 0
