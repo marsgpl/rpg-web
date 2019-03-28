@@ -1,12 +1,52 @@
 //
 
 const path = require("path")
-// const CopyWebpackPlugin = require("copy-webpack-plugin")
-const HtmlWebpackPlugin = require("html-webpack-plugin")
+const CopyPlugin = require("copy-webpack-plugin")
+const HtmlPlugin = require("html-webpack-plugin")
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
+const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin")
+
+const PROD = process.env.NODE_ENV === "production"
+
+const plugins = [
+    new CopyPlugin([
+        { from: "src/img/favicon.png", to: "img/favicon.png" },
+        { from: "src/img/favicon.ico", to: "favicon.ico" },
+    ]),
+    new MiniCssExtractPlugin({
+        filename: "bundle.css",
+    }),
+]
+
+if ( PROD ) {
+    plugins.push(new OptimizeCssAssetsPlugin({
+        assetNameRegExp: /bundle\.css$/,
+        cssProcessor: require("cssnano"),
+        cssProcessorPluginOptions: {
+            preset: [
+                "default", { discardComments:{ removeAll:true } },
+            ],
+        },
+    }))
+}
+
+plugins.push(new HtmlPlugin({
+    template: "./src/html/index.html",
+    filename: "index.html",
+    hash: true,
+    minify: PROD ? {
+        collapseBooleanAttributes: true,
+        collapseWhitespace: true,
+        collapseInlineTagWhitespace: true,
+        maxLineLength: 1023,
+        quoteCharacter: '"',
+        removeComments: true,
+        removeStyleLinkTypeAttributes: true,
+        removeScriptTypeAttributes: true,
+    } : false,
+}))
 
 module.exports = {
-    mode: "development",
     entry: "./src/js/main.js",
     resolve: {
         modules: [
@@ -21,34 +61,17 @@ module.exports = {
         path: path.resolve(__dirname, "build"),
         filename: "bundle.js",
     },
-    plugins: [
-        // new CopyWebpackPlugin([
-        //     {
-        //         from: "src/img",
-        //         to: "img",
-        //     },
-        // ]),
-        new MiniCssExtractPlugin({
-            filename: "bundle.css",
-        }),
-        new HtmlWebpackPlugin({
-            template: "./src/html/index.html",
-            filename: "index.html",
-            hash: true,
-        }),
-    ],
+    plugins,
     module: {
         rules: [
             {
                 test: /\.js$/,
-                include: /src\/js/,
-                use: [
-                    "babel-loader",
-                ],
+                include: path.resolve(__dirname, "src/js"),
+                loader: "babel-loader",
             },
             {
                 test: /\.styl$/,
-                include: /src\/css/,
+                include: path.resolve(__dirname, "src/css"),
                 use: [
                     MiniCssExtractPlugin.loader,
                     "css-loader",
@@ -57,8 +80,8 @@ module.exports = {
                 ],
             },
             {
-                test: /\.(png|jpe?g)$/,
-                include: /src\/img/,
+                test: /\.(png|jpe?g|svg)$/,
+                include: path.resolve(__dirname, "src/img"),
                 use: {
                     loader: "file-loader",
                     options: {
@@ -66,6 +89,10 @@ module.exports = {
                     },
                 },
             },
-        ]
-    }
+        ],
+    },
+    devServer: {
+        contentBase: path.join(__dirname, "build"),
+        port: 55000,
+    },
 }

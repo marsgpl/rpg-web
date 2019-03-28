@@ -1,3 +1,4 @@
 # Isometric RPG
 
-    also webpack test
+    yarn dev
+    yarn prod

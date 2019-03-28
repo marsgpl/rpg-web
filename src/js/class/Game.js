@@ -1,7 +1,7 @@
 //
 
 export default class {
-    constructor(rootNode) {
+    constructor(rootNode, scale = 1) {
         this.node = rootNode
 
         const css = getComputedStyle(this.node)

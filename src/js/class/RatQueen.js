@@ -6,20 +6,20 @@ export default class extends Mob {
     constructor(props) {
         super(props)
 
-        this.name = props.name || "Rat"
-        this.level = props.level || 1
-        this.hp = props.hp || [5,5]
+        this.name = props.name || "Rat Queen"
+        this.level = props.level || 2
+        this.hp = props.hp || [15,15]
 
-        this.whf = 625.9 / 318.6
+        this.whf = 626.6 / 315.2
 
-        this.width = 65 // px
+        this.width = 95 // px
         this.height = this.width / this.whf // px
 
         this.bgX = this.width * .1
         this.bgY = this.height * .33
 
-        this.speed = 2
+        this.speed = 1.5
 
-        this.classes.push("Rat")
+        this.classes.push("RatQueen")
     }
 }

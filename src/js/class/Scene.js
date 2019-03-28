@@ -1,32 +1,39 @@
 //
 
-import * as matrix from "transformation-matrix"
+import {
+    compose as mxCompose,
+    rotateDEG as mxRotate,
+    skewDEG as mxSkew,
+    applyToPoint as mxApplyToPoint,
+} from "transformation-matrix"
 
 export default class {
-    constructor({width, height, pos, debug}) {
+    constructor({width, height, pos, tiles, scale}) {
         this.width = width // tile
         this.height = height // tile
         this.pos = pos // [tile,tile]
-        this.debug = debug
+        this.scale = scale || 1
 
-        this.tileW = 32 // px
-        this.tileH = 32 // px
+        this.tiles = tiles || []
+
+        this.tileW = 32 * this.scale // px
+        this.tileH = 32 * this.scale // px
 
         this.figures = {}
-        this.nextFigureIndex = 1
+        this.nextFigureIndex = 2
 
         this.isometric = {}
         this.cartesian = {}
 
-        this.isometric.matrix = matrix.compose(
-            matrix.rotateDEG(-45),
-            matrix.skewDEG(19, 19),
+        this.isometric.matrix = mxCompose(
+            mxRotate(-45),
+            mxSkew(19, 19),
         )
     }
 
-    getTilePosByMouse =(x, y) => {
-        x += this.isometric.offset[0]
-        y += this.isometric.offset[1]
+    getTilePosByMouse(x, y) {
+        x += this.cartesian.offset[0]
+        y += this.cartesian.offset[1]
 
         const isoY = (y*2 - 1/2 + x) / 2
         const isoX = x - isoY
@@ -37,7 +44,7 @@ export default class {
         ]
     }
 
-    cartToIso = point => matrix.applyToPoint(this.isometric.matrix, point)
+    cartToIso = point => mxApplyToPoint(this.isometric.matrix, point)
 
     setCurrentPlayer(figureId) {
         this.currentPlayer = this.figures[figureId]
@@ -52,7 +59,6 @@ export default class {
     setMoveSpeed(speed) {
         const tr = `top ${speed}s linear, left ${speed}s linear`
 
-        this.isometric.node.style.transition = tr
         this.cartesian.node.style.transition = tr
 
         if ( this.currentPlayer ) {
@@ -68,29 +74,10 @@ export default class {
         }
     }
 
-    move(pos) {
-        this.pos = pos
-
-        const x = this.tileW / 2 + this.pos[0] * this.tileW
-        const y = this.tileH / 2 + this.pos[1] * this.tileH
-
-        const iso = this.cartToIso([x, y])
-
-        this.isometric.offset = iso
-
-        const top = this.parentHeight / 2 - iso[1] + "px"
-        const left = this.parentWidth / 2 - iso[0] + "px"
-
-        this.isometric.node.style.top = top
-        this.isometric.node.style.left = left
-
-        this.cartesian.node.style.top = top
-        this.cartesian.node.style.left = left
-    }
-
     addFigure(figureId, figure) {
         this.figures[figureId] = figure
-        figure.zIndex = this.nextFigureIndex++
+        figure.scale = this.scale
+        figure.zIndex = figure.zIndex || this.nextFigureIndex++
     }
 
     renderFigure(figureId) {
@@ -118,17 +105,30 @@ export default class {
         this.parentWidth = parentWidth
         this.parentHeight = parentHeight
 
-        this.renderIsometric(parentNode, sceneId)
-        this.renderCartesian(parentNode, sceneId)
+        this.renderCartesian(parentNode)
+        this.renderIsometric(this.cartesian.node, sceneId)
+
+        this.renderTiles()
     }
 
-    renderDebugName(parentNode, sceneId) {
-        const name = document.createElement("div")
+    renderTiles() {
+        this.tiles.forEach(this.renderTile)
+    }
 
-        name.className = "name"
-        name.textContent = sceneId
+    renderTile =([type,x,y,w,h], index) => {
+        const tile = document.createElement("div")
 
-        parentNode.appendChild(name)
+        const s = tile.style
+
+        s.top = y * this.tileH + "px"
+        s.left = x * this.tileW + "px"
+        s.width = w * this.tileW + "px"
+        s.height = h * this.tileH + "px"
+        s.zIndex = index + 1
+
+        tile.className = "tile " + type
+
+        this.isometric.node.appendChild(tile)
     }
 
     renderIsometric(parentNode, sceneId) {
@@ -137,50 +137,43 @@ export default class {
         this.isometric.width = this.tileW * this.width
         this.isometric.height = this.tileH * this.height
 
-        const x = this.tileW / 2 + this.pos[0] * this.tileW
-        const y = this.tileH / 2 + this.pos[1] * this.tileH
-        const iso = this.cartToIso([x, y])
-
-        this.isometric.offset = iso
-
         const s = this.isometric.node.style
 
-        s.top = this.parentHeight / 2 - iso[1] + "px"
-        s.left = this.parentWidth / 2 - iso[0] + "px"
         s.width = this.isometric.width + "px"
         s.height = this.isometric.height + "px"
+
         s.zIndex = this.zIndex
 
-        if ( this.debug ) {
-            this.isometric.node.className = "scene isometric debug"
-            this.renderDebugName(this.isometric.node, sceneId)
-        } else {
-            this.isometric.node.className = "scene isometric"
-        }
+        this.isometric.node.className = "scene isometric"
 
         parentNode.appendChild(this.isometric.node)
     }
 
-    renderCartesian(parentNode, sceneId) {
+    renderCartesian(parentNode) {
         this.cartesian.node = document.createElement("div")
 
-        this.cartesian.width = 0//this.tileW * this.width
-        this.cartesian.height = 0//this.tileH * this.height
+        this.move(this.pos)
+
+        this.cartesian.node.style.zIndex = this.zIndex
+
+        this.cartesian.node.className = "scene cartesian"
+
+        parentNode.appendChild(this.cartesian.node)
+    }
+
+    move(pos) {
+        this.pos = pos
 
         const x = this.tileW / 2 + this.pos[0] * this.tileW
         const y = this.tileH / 2 + this.pos[1] * this.tileH
+
         const iso = this.cartToIso([x, y])
+
+        this.cartesian.offset = iso
 
         const s = this.cartesian.node.style
 
         s.top = this.parentHeight / 2 - iso[1] + "px"
         s.left = this.parentWidth / 2 - iso[0] + "px"
-        s.width = this.cartesian.width + "px"
-        s.height = this.cartesian.height + "px"
-        s.zIndex = this.zIndex
-
-        this.cartesian.node.className = "scene cartesian"
-
-        parentNode.appendChild(this.cartesian.node)
     }
 }

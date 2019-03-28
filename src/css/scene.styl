@@ -3,16 +3,21 @@
 .scene
     position absolute
     &.isometric
-        background #ddd
+        background #bdbdbd
         transform-origin top left
         transform rotate(-45deg) skew(19deg, 19deg)
-    &.debug
-        background url("../img/scene/grid.png") repeat -0.25px -0.25px
-        background-size 32px 32px
-        &>.name
-            height 32px
-            line-height 32px
-            padding 0 9px
+        top 0
+        left 0
+        .tile
             position absolute
-            bottom 0
-            left 0
+            background-repeat repeat
+            background-position center
+            &.grass
+                background-color #5d865d
+            &.debug
+                background-image url("../img/scene/grid.png")
+                background-position -0.25px -0.25px
+                background-size 32px 32px
+    &.cartesian
+        width 0
+        height 0

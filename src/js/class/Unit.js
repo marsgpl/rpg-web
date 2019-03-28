@@ -3,13 +3,18 @@
 import Figure from "class/Figure"
 
 export default class extends Figure {
-    constructor({name, level, hp, pos}) {
+    constructor({name, level, hp, pos, angle}) {
         super(pos)
 
         this.name = name
         this.level = level || 1
         this.hp = hp || [1,1]
 
+        if ( typeof angle == "number" ) {
+            this.angle = angle
+        }
+
+        this.speed = 1
         this.addHp = false
 
         this.classes.push("unit")
