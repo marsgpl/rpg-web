@@ -1,6 +1,7 @@
 //
 
 const path = require("path")
+// const CopyWebpackPlugin = require("copy-webpack-plugin")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 
@@ -21,33 +22,50 @@ module.exports = {
         filename: "bundle.js",
     },
     plugins: [
+        // new CopyWebpackPlugin([
+        //     {
+        //         from: "src/img",
+        //         to: "img",
+        //     },
+        // ]),
+        new MiniCssExtractPlugin({
+            filename: "bundle.css",
+        }),
         new HtmlWebpackPlugin({
             template: "./src/html/index.html",
             filename: "index.html",
             hash: true,
-        }),
-        new MiniCssExtractPlugin({
-            filename: "bundle.css",
         }),
     ],
     module: {
         rules: [
             {
                 test: /\.js$/,
-                exclude: /node_modules/,
+                include: /src\/js/,
                 use: [
                     "babel-loader",
                 ],
             },
             {
                 test: /\.styl$/,
+                include: /src\/css/,
                 use: [
                     MiniCssExtractPlugin.loader,
                     "css-loader",
                     "postcss-loader",
                     "stylus-loader",
                 ],
-            }
+            },
+            {
+                test: /\.(png|jpe?g)$/,
+                include: /src\/img/,
+                use: {
+                    loader: "file-loader",
+                    options: {
+                        name: "img/[hash].[ext]",
+                    },
+                },
+            },
         ]
     }
 }
