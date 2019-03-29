@@ -8,22 +8,20 @@ import {
 } from "transformation-matrix"
 
 export default class {
-    constructor({width, height, pos, tiles, scale}) {
-        this.width = width // tile
-        this.height = height // tile
-        this.pos = pos // [tile,tile]
-        this.scale = scale || 1
+    constructor(props) {
+        this.width = props.width || 10 // tile
+        this.height = props.height || 10 // tile
+        this.pos = props.pos || [4,4] // [tile,tile]
+        this.tiles = props.tiles || []
 
-        this.tiles = tiles || []
-
-        this.tileW = 32 * this.scale // px
-        this.tileH = 32 * this.scale // px
+        this.tileW = 32 // px
+        this.tileH = 32 // px
 
         this.figures = {}
-        this.nextFigureIndex = 2
+        this.figureBaseZ = this.width * this.height + this.tiles.length
 
-        this.isometric = {}
         this.cartesian = {}
+        this.isometric = {}
 
         this.isometric.matrix = mxCompose(
             mxRotate(-45),
@@ -48,6 +46,7 @@ export default class {
 
     setCurrentPlayer(figureId) {
         this.currentPlayer = this.figures[figureId]
+        this.currentPlayer.extraZ = 4
     }
 
     currentPlayerStartRoute(pos) {
@@ -66,18 +65,17 @@ export default class {
         }
     }
 
-    moveCurrentPlayer(pos) {
+    moveCurrentPlayer(pos, angle) {
         this.move(pos)
 
         if ( this.currentPlayer ) {
-            this.currentPlayer.move(pos, this.tileW, this.tileH, this.cartToIso)
+            this.currentPlayer.move(pos, angle, this.tileW, this.tileH, this.cartToIso)
+            this.currentPlayer.recalcZ(this.figureBaseZ)
         }
     }
 
     addFigure(figureId, figure) {
         this.figures[figureId] = figure
-        figure.scale = this.scale
-        figure.zIndex = figure.zIndex || this.nextFigureIndex++
     }
 
     renderFigure(figureId) {
@@ -92,6 +90,7 @@ export default class {
             this.tileW,
             this.tileH,
             this.cartToIso,
+            this.figureBaseZ,
         )
     }
 
@@ -142,7 +141,7 @@ export default class {
         s.width = this.isometric.width + "px"
         s.height = this.isometric.height + "px"
 
-        s.zIndex = this.zIndex
+        s.zIndex = 1
 
         this.isometric.node.className = "scene isometric"
 

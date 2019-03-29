@@ -3,16 +3,12 @@
 import Figure from "class/Figure"
 
 export default class extends Figure {
-    constructor({name, level, hp, pos, angle}) {
-        super(pos)
+    constructor(props) {
+        super(props)
 
-        this.name = name
-        this.level = level || 1
-        this.hp = hp || [1,1]
-
-        if ( typeof angle == "number" ) {
-            this.angle = angle
-        }
+        this.name = props.name
+        this.level = props.level
+        this.hp = props.hp
 
         this.speed = 1
         this.addHp = false
@@ -69,6 +65,7 @@ export default class extends Figure {
         if ( !this.route ) { return }
 
         if ( this.route.tmt ) {
+            this.moving = false
             clearTimeout(this.route.tmt)
         }
 
@@ -101,8 +98,24 @@ export default class extends Figure {
             next[1] += to[1] > from[1] ? +1 : -1
         }
 
+        const xi = next[0] - from[0]
+        const yi = next[1] - from[1]
+
+        let angle
+            = (xi==1&&yi==1) ? "e"
+            : (xi==-1&&yi==-1) ? "w"
+            : (xi==1&&yi==-1) ? "n"
+            : (xi==-1&&yi==1) ? "s"
+            : xi==1 ? "ne"
+            : xi==-1 ? "sw"
+            : yi==1 ? "se"
+            : yi==-1 ? "nw"
+            : "s"
+
+        this.moving = true
+
         this.route.scene.setMoveSpeed(speed)
-        this.route.scene.moveCurrentPlayer(next)
+        this.route.scene.moveCurrentPlayer(next, angle)
 
         this.route.from = next
         this.route.tmt = setTimeout(this.routeMove, speed * 1000)

@@ -1,11 +1,14 @@
 //
 
 export default class {
-    constructor(pos) {
-        this.pos = pos // [tile,tile]
+    constructor(props) {
+        this.pos = props.pos || [0,0] // [tile,tile]
+        this.angle = props.angle || "s"
 
-        this.angle = 0
-        this.scale = 1
+        this.extraZ = 0
+
+        this.width = 10 // px
+        this.height = 10 // px
 
         this.bgX = 0
         this.bgY = 0
@@ -13,17 +16,17 @@ export default class {
         this.classes = [ "figure" ]
     }
 
-    render(parentNode, tileW, tileH, cartToIso) {
+    render(parentNode, tileW, tileH, cartToIso, figureBaseZ) {
         this.node = document.createElement("div")
 
-        this.move(this.pos, tileW, tileH, cartToIso)
+        this.move(this.pos, this.angle, tileW, tileH, cartToIso)
 
         const s = this.node.style
 
-        s.width = this.width * this.scale + "px"
-        s.height = this.height * this.scale + "px"
+        s.width = this.width + "px"
+        s.height = this.height + "px"
 
-        s.zIndex = this.zIndex
+        this.recalcZ(figureBaseZ)
 
         this.node.className = this.classes.join(" ")
 
@@ -33,8 +36,13 @@ export default class {
         parentNode.appendChild(this.node)
     }
 
-    move(pos, tileW, tileH, cartToIso) {
+    recalcZ(figureBaseZ) {
+        this.node.style.zIndex = figureBaseZ * 5 + (this.pos[1] - this.pos[0]) * 5 + this.extraZ
+    }
+
+    move(pos, angle, tileW, tileH, cartToIso) {
         this.pos = pos
+        this.angle = angle
 
         const x = tileW / 2 + this.pos[0] * tileW
         const y = tileH / 2 + this.pos[1] * tileH
@@ -44,8 +52,12 @@ export default class {
         let bgMulX = 1
         let bgMulY = 1
 
-        if ( this.angle === 1 ) {
+        if ( this.angle=="se" || this.angle=="e" || this.angle=="ne" || this.angle=="n" ) {
             bgMulX = -1
+        }
+
+        if ( this.bg ) {
+            this.bg.node.className = [ "bg", this.angle ].join(" ")
         }
 
         iso[0] -= this.width / 2 - this.bgX * bgMulX
@@ -61,15 +73,9 @@ export default class {
         this.bg = {}
         this.bg.node = document.createElement("div")
 
-        const classes = [ "bg" ]
+        this.bg.node.className = [ "bg", this.angle ].join(" ")
 
-        if ( this.angle === 1 ) {
-            classes.push("a1")
-        }
-
-        this.bg.node.className = classes.join(" ")
-
-        this.node.appendChild(this.bg.node)
+        parentNode.appendChild(this.bg.node)
     }
 
     renderDetails(parentNode) {}

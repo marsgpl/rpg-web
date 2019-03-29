@@ -27,23 +27,22 @@ document.addEventListener("DOMContentLoaded", e => {
         level: 1,
         hp: [84,100],
         pos: [10,10],
+        angle: "s",
     })
 
     const trader = new Trader({
-        name: "Trader",
         pos: [3,8],
-        angle: 1,
+        angle: "e",
     })
 
     const rat = new Rat({
-        hp: [4,5],
         pos: [14,9],
+        hp: [4,5],
     })
 
     const ratQ = new RatQueen({
-        hp: [1,15],
         pos: [12,4],
-        angle: 1,
+        angle: "e",
     })
 
     game.addScene("Spawn", scene)
