@@ -34,17 +34,21 @@ document.addEventListener("DOMContentLoaded", e => {
         pos: [3+118,8+118],
     })
 
+    const ratQ = new RatQueen({
+        pos: [12+118,4+118],
+        angle: "e",
+    })
+
     const rat = new Rat({
         pos: [130,130],
         hp: [4,5],
     })
     const rat2 = new Rat({
-        pos: [124,137],
-    })
-
-    const ratQ = new RatQueen({
-        pos: [12+118,4+118],
+        pos: [126,139],
         angle: "e",
+    })
+    const rat3 = new Rat({
+        pos: [117,135],
     })
 
     game.addScene("Spawn", scene)
@@ -53,6 +57,7 @@ document.addEventListener("DOMContentLoaded", e => {
     scene.addFigure(3, ratQ)
     scene.addFigure(4, rat)
     scene.addFigure(5, rat2)
+    scene.addFigure(6, rat3)
 
     scene.setCurrentPlayer(1)
 
