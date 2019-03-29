@@ -47,7 +47,7 @@ plugins.push(new HtmlPlugin({
 }))
 
 module.exports = {
-    entry: "./src/js/main.js",
+    entry: ["babel-polyfill", "./src/js/main.js"],
     resolve: {
         modules: [
             path.resolve(__dirname, "src/js"),

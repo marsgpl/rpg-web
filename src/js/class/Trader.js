@@ -1,23 +1,19 @@
 //
 
-import models from "const/models"
 import Npc from "class/Npc"
+
+const MODEL = "Man"
+const NAME = "Trader"
+const WIDTH = 44
 
 export default class extends Npc {
     constructor(props) {
         super(props)
 
-        this.model = "Man"
+        this.model = this.validateModel(props.model || MODEL)
+        this.name = props.name || NAME
 
-        this.name = this.name || "Trader"
-        this.level = 1
-        this.hp = [1,1]
-
-        this.width = 44 // px
-        this.height = this.width / models[this.model].whf // px
-
-        this.bgX = this.width * .1
-        this.bgY = this.height * .055
+        this.calcWH(props.width || WIDTH)
 
         this.classes.push("Trader")
     }

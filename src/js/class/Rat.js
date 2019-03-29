@@ -1,25 +1,25 @@
 //
 
-import models from "const/models"
 import Mob from "class/Mob"
+
+const MODEL = "Rat"
+const NAME = "Giant Rat"
+const LEVEL = 1
+const HP = [5,5]
+const SPEED = 1.5
+const WIDTH = 110
 
 export default class extends Mob {
     constructor(props) {
         super(props)
 
-        this.model = "Rat"
+        this.model = this.validateModel(props.model || MODEL)
+        this.name = props.name || NAME
+        this.level = props.level || LEVEL
+        this.hp = props.hp || HP
+        this.speed = props.speed || SPEED
 
-        this.name = this.name || "Giant Rat"
-        this.level = this.level || 1
-        this.hp = this.hp || [5,5]
-
-        this.width = 110 // px
-        this.height = this.width / models[this.model].whf // px
-
-        this.bgX = this.width * .1
-        this.bgY = this.height * .33
-
-        this.speed = 2
+        this.calcWH(props.width || WIDTH)
 
         this.classes.push("Rat")
     }

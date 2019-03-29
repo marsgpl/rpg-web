@@ -7,15 +7,27 @@ import {
     applyToPoint as mxApplyToPoint,
 } from "transformation-matrix"
 
+import {div} from "lib/helper"
+
+const WIDTH = 11
+const HEIGHT = 11
+const POS = [5,5]
+const TILES = [
+    ["debug",-1,-1,13,13],
+]
+
+const TILE_W = 32 // px
+const TILE_H = 32 // px
+
 export default class {
     constructor(props) {
-        this.width = props.width || 10 // tile
-        this.height = props.height || 10 // tile
-        this.pos = props.pos || [4,4] // [tile,tile]
-        this.tiles = props.tiles || []
+        this.width = props.width || WIDTH
+        this.height = props.height || HEIGHT
+        this.pos = props.pos || POS
+        this.tiles = props.tiles || TILES
 
-        this.tileW = 32 // px
-        this.tileH = 32 // px
+        this.tileW = TILE_W
+        this.tileH = TILE_H
 
         this.figures = {}
         this.figureBaseZ = this.width * this.height + this.tiles.length
@@ -23,12 +35,14 @@ export default class {
         this.cartesian = {}
         this.isometric = {}
 
+        // TODO: take from css?
         this.isometric.matrix = mxCompose(
             mxRotate(-45),
             mxSkew(19, 19),
         )
     }
 
+    // TODO: rewrite this ugly unprecise function in a right way and remove hardcode
     getTilePosByMouse(x, y) {
         x += this.cartesian.offset[0]
         y += this.cartesian.offset[1]
@@ -46,7 +60,7 @@ export default class {
 
     setCurrentPlayer(figureId) {
         this.currentPlayer = this.figures[figureId]
-        this.currentPlayer.extraZ = 4
+        this.currentPlayer.extraZ = 4 // TODO: make interface for this and move 4 to constants
     }
 
     currentPlayerStartRoute(pos) {
@@ -61,7 +75,7 @@ export default class {
         this.cartesian.node.style.transition = tr
 
         if ( this.currentPlayer ) {
-            this.currentPlayer.node.style.transition = tr
+            this.currentPlayer.node.style.transition = tr + `, z-index ${speed}s linear`
         }
     }
 
@@ -115,7 +129,7 @@ export default class {
     }
 
     renderTile =([type,x,y,w,h], index) => {
-        const tile = document.createElement("div")
+        const tile = div()
 
         const s = tile.style
 
@@ -125,13 +139,13 @@ export default class {
         s.height = h * this.tileH + "px"
         s.zIndex = index + 1
 
-        tile.className = "tile " + type
+        tile.className = [ "tile", type ].join(" ")
 
         this.isometric.node.appendChild(tile)
     }
 
     renderIsometric(parentNode, sceneId) {
-        this.isometric.node = document.createElement("div")
+        this.isometric.node = div()
 
         this.isometric.width = this.tileW * this.width
         this.isometric.height = this.tileH * this.height
@@ -149,7 +163,7 @@ export default class {
     }
 
     renderCartesian(parentNode) {
-        this.cartesian.node = document.createElement("div")
+        this.cartesian.node = div()
 
         this.move(this.pos)
 

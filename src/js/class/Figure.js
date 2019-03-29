@@ -1,26 +1,38 @@
 //
 
 import models from "const/models"
+import {div} from "lib/helper"
+
+const MODEL = "Default"
+const POS = [0,0]
+const ANGLE = "s"
+const WIDTH = 30 // px
 
 export default class {
     constructor(props) {
-        this.pos = props.pos || [0,0] // [tile,tile]
-        this.angle = props.angle || "s"
+        this.model = this.validateModel(props.model)
+        this.pos = props.pos || POS
+        this.angle = props.angle || ANGLE
 
+        this.calcWH(props.width || WIDTH)
+
+        // z-index bonus to move current player or npc or bosses above unimportant figures
+        // should not be set outside
+            // current player: +4
+            // player: +3
+            // npc: +2
+            // boss: +1
+            // other: 0
         this.extraZ = 0
-
-        this.width = 10 // px
-        this.height = 10 // px
-
-        this.bgX = 0
-        this.bgY = 0
-
-        this.model = "Default"
 
         this.classes = [ "figure" ]
     }
 
-    requestModel() {
+    validateModel(model) {
+        return models[model] ? model : MODEL
+    }
+
+    renderModel() {
         const model = models[this.model]
 
         if ( !model ) {
@@ -28,42 +40,43 @@ export default class {
         }
 
         if ( model.loaded ) {
-            this.renderModel(model)
+            this.drawModel(model)
         } else if ( model.loading ) {
-            model.onLoad.push(this.renderModel)
+            model.onLoad.push(this.drawModel)
         } else { // init loading
+            model.loading = true
             model.onLoad = model.onLoad || []
-            model.onLoad.push(this.renderModel)
+            model.onLoad.push(this.drawModel)
             this.loadModel(model)
         }
     }
 
-    loadModel(model) {
-        model.loading = true
+    async loadModel(model) {
+        const r = await fetch(model.url)
+        const svg = await r.text()
 
-        fetch(model.url)
-            .then(r => r.text())
-            .then(svg => {
-                model.loading = false
-                model.loaded = true
-                model.svg = svg
-                model.onLoad.forEach(cb => cb(model))
-                delete model.onLoad
-            })
+        model.loaded = true
+        model.svg = svg
+
+        model.onLoad.forEach(cb => cb(model))
+
+        delete model.loading
+        delete model.onLoad
     }
 
-    renderModel = model => {
+    drawModel = model => {
         this.bg = {}
-        this.bg.node = document.createElement("div")
+
+        this.bg.node = div()
 
         this.bg.node.className = [ "bg", this.angle ].join(" ")
-        this.bg.node.innerHTML = model.svg
+        this.bg.node.innerHTML = model.svg // TODO: optimize?
 
         this.node.appendChild(this.bg.node)
     }
 
     render(parentNode, tileW, tileH, cartToIso, figureBaseZ) {
-        this.node = document.createElement("div")
+        this.node = div()
 
         this.move(this.pos, this.angle, tileW, tileH, cartToIso)
 
@@ -80,15 +93,11 @@ export default class {
 
         parentNode.appendChild(this.node)
 
-        this.requestModel()
+        this.renderModel()
     }
 
     recalcZ(figureBaseZ) {
-        const correctZ = ( this.moving && (this.angle=="s"||this.angle=="se"||this.angle=="sw") )
-            ? -1
-            : 0
-
-        this.node.style.zIndex = figureBaseZ * 5 + (this.pos[1] - this.pos[0] + correctZ) * 5 + this.extraZ
+        this.node.style.zIndex = figureBaseZ * 5 + (this.pos[1] - this.pos[0]) * 5 + this.extraZ
     }
 
     move(pos, angle, tileW, tileH, cartToIso) {
@@ -121,4 +130,15 @@ export default class {
     }
 
     renderDetails(parentNode) {}
+
+    calcWH(width) {
+        const model = models[this.model]
+
+        this.width = width
+        this.height = this.width / model.whf // px
+
+        // move whole figure with this offset to make background stand exactly on tile center
+        this.bgX = this.width * model.bgX
+        this.bgY = this.height * model.bgY
+    }
 }

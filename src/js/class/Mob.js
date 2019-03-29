@@ -6,7 +6,7 @@ export default class extends Unit {
     constructor(props) {
         super(props)
 
-        this.addHp = true
+        this.needRenderHp = true
 
         this.classes.push("mob")
     }

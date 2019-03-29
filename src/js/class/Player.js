@@ -1,22 +1,21 @@
 //
 
-import models from "const/models"
 import Unit from "class/Unit"
+
+const MODEL = "ManJock"//"Man"
+const SPEED = .5
+const WIDTH = 55//46
 
 export default class extends Unit {
     constructor(props) {
         super(props)
 
-        this.model = "Man"
+        this.model = this.validateModel(props.model || MODEL)
+        this.speed = props.speed || SPEED
 
-        this.width = 46 // px
-        this.height = this.width / models[this.model].whf // px
+        this.calcWH(props.width || WIDTH)
 
-        this.bgX = this.width * .1
-        this.bgY = this.height * .055
-
-        this.speed = .5
-        this.addHp = true
+        this.needRenderHp = true
         this.extraZ = 3
 
         this.classes.push("Player")

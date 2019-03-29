@@ -1,25 +1,25 @@
 //
 
-import models from "const/models"
 import MobBoss from "class/MobBoss"
+
+const MODEL = "RatQueen"
+const NAME = "Rat Queen"
+const LEVEL = 2
+const HP = [15,15]
+const SPEED = 1
+const WIDTH = 160
 
 export default class extends MobBoss {
     constructor(props) {
         super(props)
 
-        this.model = "RatQueen"
+        this.model = this.validateModel(props.model || MODEL)
+        this.name = props.name || NAME
+        this.level = props.level || LEVEL
+        this.hp = props.hp || HP
+        this.speed = props.speed || SPEED
 
-        this.name = this.name || "Rat Queen"
-        this.level = this.level || 2
-        this.hp = this.hp || [15,15]
-
-        this.width = 160 // px
-        this.height = this.width / models[this.model].whf // px
-
-        this.bgX = this.width * .1
-        this.bgY = this.height * .33
-
-        this.speed = 1.5
+        this.calcWH(props.width || WIDTH)
 
         this.classes.push("RatQueen")
     }

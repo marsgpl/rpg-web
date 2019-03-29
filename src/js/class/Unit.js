@@ -1,17 +1,24 @@
 //
 
 import Figure from "class/Figure"
+import {div} from "lib/helper"
+
+const LEVEL = 1
+const HP = [1,1]
+const SPEED = 1 // more - slower, seconds to move from one tile to another
+
+const DIAGONAL_SPEED_FACTOR = 1.4142135623730951
 
 export default class extends Figure {
     constructor(props) {
         super(props)
 
-        this.name = props.name
-        this.level = props.level
-        this.hp = props.hp
+        this.name = props.name || this.model
+        this.level = props.level || LEVEL
+        this.hp = props.hp || HP
+        this.speed = props.speed || SPEED
 
-        this.speed = 1
-        this.addHp = false
+        this.needRenderHp = false
 
         this.classes.push("unit")
     }
@@ -19,13 +26,13 @@ export default class extends Figure {
     renderDetails(parentNode) {
         this.renderName(parentNode)
 
-        if ( this.addHp && this.hp[0] !== this.hp[1] ) {
+        if ( this.needRenderHp && this.hp[0] !== this.hp[1] ) {
             this.renderHp(parentNode)
         }
     }
 
     renderName(parentNode) {
-        const name = document.createElement("div")
+        const name = div()
 
         name.className = "name"
         name.textContent = this.name
@@ -34,10 +41,10 @@ export default class extends Figure {
     }
 
     renderHp(parentNode) {
-        const hp = document.createElement("div")
+        const hp = div()
         hp.className = "hp"
 
-        const bar = document.createElement("div")
+        const bar = div()
         bar.className = "bar"
         bar.style.width = (this.hp[0] / this.hp[1] * 100) + "%"
 
@@ -54,7 +61,6 @@ export default class extends Figure {
                 from: this.pos,
                 to,
                 speed: this.speed,
-                diagonalSpeedFactor: 1.4142135623730951,
             }
 
             this.routeMove()
@@ -66,7 +72,6 @@ export default class extends Figure {
 
         if ( this.route.tmt ) {
             this.moving = false
-            this.recalcZ(this.route.scene.figureBaseZ)
             clearTimeout(this.route.tmt)
         }
 
@@ -92,7 +97,7 @@ export default class extends Figure {
         } else if ( xDiff && yDiff ) {
             next[0] += to[0] > from[0] ? +1 : -1
             next[1] += to[1] > from[1] ? +1 : -1
-            speed *= this.route.diagonalSpeedFactor
+            speed *= DIAGONAL_SPEED_FACTOR
         } else if ( xDiff ) {
             next[0] += to[0] > from[0] ? +1 : -1
         } else { // yDiff

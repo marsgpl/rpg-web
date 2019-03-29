@@ -51,7 +51,7 @@ export default class {
                 e.pageX - this.width/2,
                 e.pageY - this.height/2,
             )
-console.log(pos)
+// console.log(pos)
             this.currentScene.currentPlayerStartRoute(pos)
         }
     }
