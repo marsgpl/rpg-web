@@ -1,5 +1,7 @@
 //
 
+import models from "const/models"
+
 export default class {
     constructor(props) {
         this.pos = props.pos || [0,0] // [tile,tile]
@@ -13,7 +15,51 @@ export default class {
         this.bgX = 0
         this.bgY = 0
 
+        this.model = "Default"
+
         this.classes = [ "figure" ]
+    }
+
+    requestModel() {
+        const model = models[this.model]
+
+        if ( !model ) {
+            throw `Model not found by id: "${this.model}"`
+        }
+
+        if ( model.loaded ) {
+            this.renderModel(model)
+        } else if ( model.loading ) {
+            model.onLoad.push(this.renderModel)
+        } else { // init loading
+            model.onLoad = model.onLoad || []
+            model.onLoad.push(this.renderModel)
+            this.loadModel(model)
+        }
+    }
+
+    loadModel(model) {
+        model.loading = true
+
+        fetch(model.url)
+            .then(r => r.text())
+            .then(svg => {
+                model.loading = false
+                model.loaded = true
+                model.svg = svg
+                model.onLoad.forEach(cb => cb(model))
+                delete model.onLoad
+            })
+    }
+
+    renderModel = model => {
+        this.bg = {}
+        this.bg.node = document.createElement("div")
+
+        this.bg.node.className = [ "bg", this.angle ].join(" ")
+        this.bg.node.innerHTML = model.svg
+
+        this.node.appendChild(this.bg.node)
     }
 
     render(parentNode, tileW, tileH, cartToIso, figureBaseZ) {
@@ -30,10 +76,11 @@ export default class {
 
         this.node.className = this.classes.join(" ")
 
-        this.renderBackground(this.node)
         this.renderDetails(this.node)
 
         parentNode.appendChild(this.node)
+
+        this.requestModel()
     }
 
     recalcZ(figureBaseZ) {
@@ -67,15 +114,6 @@ export default class {
 
         s.top = iso[1] + "px"
         s.left = iso[0] + "px"
-    }
-
-    renderBackground(parentNode) {
-        this.bg = {}
-        this.bg.node = document.createElement("div")
-
-        this.bg.node.className = [ "bg", this.angle ].join(" ")
-
-        parentNode.appendChild(this.bg.node)
     }
 
     renderDetails(parentNode) {}

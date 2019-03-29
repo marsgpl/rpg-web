@@ -13,43 +13,46 @@ document.addEventListener("DOMContentLoaded", e => {
     const game = new Game(document.querySelector("#mount"))
 
     const scene = new Scene({
-        width: 22,
-        height: 22,
-        pos: [10,10],
+        pos: [129,129],
+        width: 256,
+        height: 256,
         tiles: [
-            ["grass",0,0,16,16],
-            ["debug",-1,-1,24,24],
+            ["grass",0,0,200,200],
+            ["debug",-1,-1,258,258],
         ],
     })
 
     const me = new Player({
-        name: "Player Killer",
+        pos: [129,129],
+        name: "You",
         level: 1,
         hp: [84,100],
-        pos: [10,10],
-        angle: "s",
-    })
-
-    const trader = new Trader({
-        pos: [3,8],
         angle: "e",
     })
 
+    const trader = new Trader({
+        pos: [3+118,8+118],
+    })
+
     const rat = new Rat({
-        pos: [14,9],
+        pos: [130,130],
         hp: [4,5],
+    })
+    const rat2 = new Rat({
+        pos: [124,137],
     })
 
     const ratQ = new RatQueen({
-        pos: [12,4],
+        pos: [12+118,4+118],
         angle: "e",
     })
 
     game.addScene("Spawn", scene)
     scene.addFigure(1, me)
     scene.addFigure(2, trader)
-    scene.addFigure(3, rat)
-    scene.addFigure(4, ratQ)
+    scene.addFigure(3, ratQ)
+    scene.addFigure(4, rat)
+    scene.addFigure(5, rat2)
 
     scene.setCurrentPlayer(1)
 
