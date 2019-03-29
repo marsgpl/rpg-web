@@ -13,7 +13,7 @@ export default class extends Npc {
         this.level = 1
         this.hp = [1,1]
 
-        this.width = 48 // px
+        this.width = 44 // px
         this.height = this.width / models[this.model].whf // px
 
         this.bgX = this.width * .1

@@ -66,6 +66,7 @@ export default class extends Figure {
 
         if ( this.route.tmt ) {
             this.moving = false
+            this.recalcZ(this.route.scene.figureBaseZ)
             clearTimeout(this.route.tmt)
         }
 

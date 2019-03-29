@@ -84,7 +84,11 @@ export default class {
     }
 
     recalcZ(figureBaseZ) {
-        this.node.style.zIndex = figureBaseZ * 5 + (this.pos[1] - this.pos[0]) * 5 + this.extraZ
+        const correctZ = ( this.moving && (this.angle=="s"||this.angle=="se"||this.angle=="sw") )
+            ? -1
+            : 0
+
+        this.node.style.zIndex = figureBaseZ * 5 + (this.pos[1] - this.pos[0] + correctZ) * 5 + this.extraZ
     }
 
     move(pos, angle, tileW, tileH, cartToIso) {

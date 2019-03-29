@@ -9,7 +9,7 @@ export default class extends Unit {
 
         this.model = "Man"
 
-        this.width = 50 // px
+        this.width = 46 // px
         this.height = this.width / models[this.model].whf // px
 
         this.bgX = this.width * .1
