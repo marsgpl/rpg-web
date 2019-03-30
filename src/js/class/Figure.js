@@ -1,20 +1,20 @@
 //
 
-import models from "const/models"
 import {div} from "lib/helper"
+import models from "const/models"
 
-const MODEL = "Default"
+const DEFAULT_MODEL = "Default"
 const POS = [0,0]
 const ANGLE = "s"
-const WIDTH = 30 // px
+const HEIGHT = 30 // px
 
 export default class {
     constructor(props) {
-        this.model = this.validateModel(props.model)
+        this.model = this.validateModelName(props.model)
         this.pos = props.pos || POS
         this.angle = props.angle || ANGLE
 
-        this.calcWH(props.width || WIDTH)
+        this.calcWH(props.width, props.height || HEIGHT)
 
         // z-index bonus to move current player or npc or bosses above unimportant figures
         // should not be set outside
@@ -32,52 +32,24 @@ export default class {
         this.classes = [ "figure" ]
     }
 
-    validateModel(model) {
-        return models[model] ? model : MODEL
-    }
-
-    renderModel() {
-        const model = models[this.model]
-
-        if ( !model ) {
-            throw `Model not found by id: "${this.model}"`
-        }
-
-        if ( model.loaded ) {
-            this.drawModel(model)
-        } else if ( model.loading ) {
-            model.onLoad.push(this.drawModel)
-        } else { // init loading
-            model.loading = true
-            model.onLoad = model.onLoad || []
-            model.onLoad.push(this.drawModel)
-            this.loadModel(model)
-        }
-    }
-
-    async loadModel(model) {
-        const r = await fetch(model.url)
-        const svg = await r.text()
-
-        model.loaded = true
-        model.svg = svg
-
-        model.onLoad.forEach(cb => cb(model))
-
-        delete model.loading
-        delete model.onLoad
+    validateModelName(name) {
+        return models[name] ? name : DEFAULT_MODEL
     }
 
     drawModel = model => {
+        let needRecalc = false
+
         if ( this.bg ) {
             if ( this.bg.angle !== this.angle ) {
+                this.bg.angle = this.angle
                 this.bg.node.className = [ "bg", this.angle ].join(" ")
+                needRecalc = true
             }
 
             if ( this.bg.model != model ) {
                 this.bg.model = model
                 this.bg.node.innerHTML = model.svg
-// console.log("!!! innerHTML", Math.random())
+                needRecalc = true
             }
         } else {
             this.bg = {}
@@ -88,47 +60,65 @@ export default class {
 
             this.bg.node.className = [ "bg", this.angle ].join(" ")
             this.bg.node.innerHTML = model.svg
-// console.log("innerHTML", Math.random())
 
             this.node.appendChild(this.bg.node)
+
+            needRecalc = true
+        }
+
+        if ( needRecalc ) {
+            this.calcTL()
         }
     }
 
-    render(parentNode, tileW, tileH, cartToIso, figureBaseZ) {
+    render(parentNode) {
         this.node = div()
 
-        this.move(this.pos, this.angle, tileW, tileH, cartToIso)
+        this.node.style.width = this.width + "px"
+        this.node.style.height = this.height + "px"
 
-        const s = this.node.style
-
-        s.width = this.width + "px"
-        s.height = this.height + "px"
-
-        this.recalcZ(figureBaseZ)
+        this.move(this.pos, this.angle)
 
         this.node.className = this.classes.join(" ")
 
         this.renderDetails(this.node)
 
         parentNode.appendChild(this.node)
-
-        this.renderModel()
     }
 
-    recalcZ(figureBaseZ) {
-        this.node.style.zIndex = figureBaseZ * this.basicMulZ
-            + (this.pos[1] - this.pos[0]) * this.basicMulZ
-            + this.extraZ
+    getCurrentModelName() {
+        const suffix
+            = (this.angle[0]=="n") ? "N"
+            : (this.angle=="w" || this.angle=="e") ? "E"
+            : ""
+
+        const modelName = this.model + suffix
+
+        return models[modelName] ? modelName : this.model
     }
 
-    move(pos, angle, tileW, tileH, cartToIso) {
+    move(pos, angle) {
         this.pos = pos
         this.angle = angle
 
-        const x = tileW / 2 + this.pos[0] * tileW
-        const y = tileH / 2 + this.pos[1] * tileH
+        this.node.style.zIndex = this.scene.figureBaseZ * this.basicMulZ
+            + (this.pos[1] - this.pos[0]) * this.basicMulZ
+            + this.extraZ
 
-        const iso = cartToIso([x, y])
+        const modelName = this.getCurrentModelName()
+
+        this.scene.game.modelLoader.load(modelName, this.drawModel)
+
+        if ( !this.bg || this.bg.model !== modelName ) {
+            this.calcTL()
+        }
+    }
+
+    calcTL() {
+        const x = this.scene.tileW / 2 + this.pos[0] * this.scene.tileW
+        const y = this.scene.tileH / 2 + this.pos[1] * this.scene.tileH
+
+        const iso = this.scene.cartToIso([x, y])
 
         let bgMulX = 1
         let bgMulY = 1
@@ -137,30 +127,26 @@ export default class {
             bgMulX = -1
         }
 
-        if ( this.bg ) {
-            if ( this.model.indexOf("JockMale")==0 ) {
-                this.model = "JockMale" + (this.angle=="e" ? "E" : "")
-            }
-            this.renderModel()
-        }
-
-        const model = models[this.model]
+        const model = this.bg && this.bg.model || models[this.model]
 
         iso[0] -= this.width / 2 - this.width * (model.bgX||0) * bgMulX
         iso[1] -= this.height - this.height * (model.bgY||0) * bgMulY
 
-        const s = this.node.style
-
-        s.top = iso[1] + "px"
-        s.left = iso[0] + "px"
+        this.node.style.top = iso[1] + "px"
+        this.node.style.left = iso[0] + "px"
     }
 
     renderDetails(parentNode) {}
 
-    calcWH(width) {
+    calcWH(width = 0, height = 0) {
         const model = models[this.model]
 
-        this.width = width
-        this.height = this.width / model.whf // px
+        if ( width ) {
+            this.width = width
+            this.height = this.width / model.whf
+        } else if ( height ) {
+            this.height = height
+            this.width = this.height * model.whf
+        }
     }
 }

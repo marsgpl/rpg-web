@@ -52,12 +52,11 @@ export default class extends Figure {
         parentNode.appendChild(hp)
     }
 
-    startRoute(to, scene) {
+    startRoute(to) {
         if ( this.route ) {
             this.route.to = to
         } else {
             this.route = {
-                scene,
                 from: this.pos,
                 to,
                 speed: this.speed,
@@ -107,7 +106,7 @@ export default class extends Figure {
         const xi = next[0] - from[0]
         const yi = next[1] - from[1]
 
-        let angle
+        const angle
             = (xi==1&&yi==1) ? "e"
             : (xi==-1&&yi==-1) ? "w"
             : (xi==1&&yi==-1) ? "n"
@@ -120,10 +119,20 @@ export default class extends Figure {
 
         this.moving = true
 
-        this.route.scene.setMoveSpeed(speed)
-        this.route.scene.moveCurrentPlayer(next, angle)
+        this.setMoveSpeed(speed)
+        this.move(next, angle)
+
+        if ( this.scene.currentPlayer === this ) {
+            this.scene.setMoveSpeed(speed)
+            this.scene.move(next)
+        }
 
         this.route.from = next
         this.route.tmt = setTimeout(this.routeMove, speed * 1000)
+    }
+
+    setMoveSpeed(speed) {
+        this.node.style.transition =
+            `top ${speed}s linear, left ${speed}s linear, z-index ${speed}s linear`
     }
 }

@@ -1,8 +1,12 @@
 //
 
+import {evl} from "lib/helper"
+
 export default class {
-    constructor(rootNode) {
+    constructor(rootNode, data, modelLoader) {
         this.node = rootNode
+        this.data = data
+        this.modelLoader = modelLoader
 
         const css = getComputedStyle(this.node)
 
@@ -12,12 +16,13 @@ export default class {
         this.scenes = {}
         this.nextSceneIndex = 1
 
-        this.node.addEventListener("click", this.onClick)
+        evl(this.node, "click", this.onClick)
     }
 
     addScene(sceneId, scene) {
         this.scenes[sceneId] = scene
         scene.zIndex = this.nextSceneIndex++
+        scene.game = this
     }
 
     renderScene(sceneId) {

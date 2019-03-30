@@ -9,7 +9,7 @@ export default class extends Item {
     constructor(props) {
         super(props)
 
-        this.model = this.validateModel(props.model || MODEL)
+        this.model = this.validateModelName(props.model || MODEL)
 
         this.calcWH(props.width || WIDTH)
 

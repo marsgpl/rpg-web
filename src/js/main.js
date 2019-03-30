@@ -1,11 +1,13 @@
 //
 
+import {evl} from "lib/helper"
+
+import GUI from "gui/GUI"
+import ModelLoader from "class/ModelLoader"
 import Game from "class/Game"
 import Scene from "class/Scene"
 import Figure from "class/Figure"
-
 import Player from "class/Player"
-
 import Helm from "class/item/Helm"
 import Sword from "class/item/Sword"
 import Jacket from "class/item/Jacket"
@@ -15,16 +17,52 @@ import Pants from "class/item/Pants"
 import Shirt from "class/item/Shirt"
 import Vest from "class/item/Vest"
 import Shield from "class/item/Shield"
-
+import ShieldRound from "class/item/ShieldRound"
 import Trader from "class/npc/Trader"
-
 import Rat from "class/mob/Rat"
 import RatQueen from "class/mob/RatQueen"
 
 import "../css/main.styl"
 
-document.addEventListener("DOMContentLoaded", e => {
-    const game = new Game(document.querySelector("#mount"))
+evl(document, "DOMContentLoaded", e => {
+    const data = {
+        currentPlayer: {
+            inventory: {
+                size: 12,
+                items: [],
+            },
+            equipment: {
+                Helm: null,
+                Shirt: {
+                    model: "Shirt",
+                    color: "#dddddd",
+                },
+                Sword: null,
+                Vest: null,
+                Shield: null,
+                Ring: null,
+                Pants: null,
+                Bands: null,
+                Boots: null,
+            }
+        }
+    }
+
+    const modelLoader = new ModelLoader
+
+    const gui = new GUI(document.querySelector("#gui"), data, modelLoader)
+
+    gui.addAction("Stats")
+    gui.addAction("Equipment")
+    gui.addAction("Inventory")
+    gui.addAction("Chat")
+
+    gui.showModal("Stats")
+    gui.showModal("Equipment")
+    gui.showModal("Inventory")
+    gui.showModal("Chat")
+
+    const game = new Game(document.querySelector("#mount"), data, modelLoader)
 
     const scene = new Scene({
         width: 128,
@@ -91,13 +129,16 @@ document.addEventListener("DOMContentLoaded", e => {
         pos: [54,66],
     })
     const shirt = new Shirt({
-        pos: [54,68],
+        pos: [52,57],
     })
     const vest = new Vest({
-        pos: [54,70],
+        pos: [52,59],
     })
     const shield = new Shield({
-        pos: [54,72],
+        pos: [52,61],
+    })
+    const shieldRound = new ShieldRound({
+        pos: [52,63],
     })
 
     game.addScene("Spawn", scene)
@@ -120,6 +161,7 @@ document.addEventListener("DOMContentLoaded", e => {
     scene.addFigure(id++, shirt)
     scene.addFigure(id++, vest)
     scene.addFigure(id++, shield)
+    scene.addFigure(id++, shieldRound)
 
     scene.setCurrentPlayer(1)
 

@@ -7,3 +7,7 @@ export function rnd(min, max) {
 export function div() {
     return document.createElement("div")
 }
+
+export function evl(node, eventName, cb) {
+    node.addEventListener(eventName, cb)
+}

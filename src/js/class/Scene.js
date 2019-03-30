@@ -54,36 +54,24 @@ export default class {
 
     setCurrentPlayer(figureId) {
         this.currentPlayer = this.figures[figureId]
+        this.currentPlayer.classes.push("current")
         this.currentPlayer.extraZ = 4 // TODO: make interface for this and move 4 to constants
     }
 
     currentPlayerStartRoute(pos) {
         if ( this.currentPlayer ) {
-            this.currentPlayer.startRoute(pos, this)
+            this.currentPlayer.startRoute(pos)
         }
     }
 
     setMoveSpeed(speed) {
-        const tr = `top ${speed}s linear, left ${speed}s linear`
-
-        this.cartesian.node.style.transition = tr
-
-        if ( this.currentPlayer ) {
-            this.currentPlayer.node.style.transition = tr + `, z-index ${speed}s linear`
-        }
-    }
-
-    moveCurrentPlayer(pos, angle) {
-        this.move(pos)
-
-        if ( this.currentPlayer ) {
-            this.currentPlayer.move(pos, angle, this.tileW, this.tileH, this.cartToIso)
-            this.currentPlayer.recalcZ(this.figureBaseZ)
-        }
+        this.cartesian.node.style.transition =
+            `top ${speed}s linear, left ${speed}s linear`
     }
 
     addFigure(figureId, figure) {
         this.figures[figureId] = figure
+        figure.scene = this
     }
 
     renderFigure(figureId) {
@@ -143,13 +131,6 @@ export default class {
 
         this.isometric.width = this.tileW * this.width
         this.isometric.height = this.tileH * this.height
-
-        const s = this.isometric.node.style
-
-        // s.width = this.isometric.width + "px"
-        // s.height = this.isometric.height + "px"
-
-        s.zIndex = 1
 
         this.isometric.node.className = "scene isometric"
 

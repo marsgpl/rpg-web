@@ -10,7 +10,7 @@ export default class extends Npc {
     constructor(props) {
         super(props)
 
-        this.model = this.validateModel(props.model || MODEL)
+        this.model = this.validateModelName(props.model || MODEL)
         this.name = props.name || NAME
 
         this.calcWH(props.width || WIDTH)
