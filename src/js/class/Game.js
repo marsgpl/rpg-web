@@ -47,12 +47,13 @@ export default class {
 
     onClick = e => {
         if ( this.currentScene ) {
-            const pos = this.currentScene.getTilePosByMouse(
-                e.pageX - this.width/2,
-                e.pageY - this.height/2,
-            )
-// console.log(pos)
-            this.currentScene.currentPlayerStartRoute(pos)
+            const pos = this.currentScene.mousePosToTilePos(e.pageX, e.pageY)
+
+            if ( e.metaKey ) {
+                console.log(pos)
+            } else {
+                this.currentScene.currentPlayerStartRoute(pos)
+            }
         }
     }
 }

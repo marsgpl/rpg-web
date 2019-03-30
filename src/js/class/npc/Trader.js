@@ -2,7 +2,7 @@
 
 import Npc from "class/Npc"
 
-const MODEL = "Man"
+const MODEL = "RogueMale"
 const NAME = "Trader"
 const WIDTH = 44
 

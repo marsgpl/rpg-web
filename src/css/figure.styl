@@ -1,6 +1,6 @@
 /**/
 
-.figure
+#mount .figure
     position absolute
     >.bg
         position absolute
@@ -8,37 +8,33 @@
         left 0
         width 100%
         height 100%
-        background-size contain
-        background-repeat no-repeat
-        background-position bottom center
         &.se
         &.e
         &.ne
         &.n
             transform scaleX(-1)
             filter fliph
-
-.unit
-    >.name
-        position absolute
-        top -22px
-        white-space nowrap
-        text-align center
-        color #fff
-        text-shadow 1px 1px 1px rgba(95, 95, 95, 0.4)
-        left -20px
-        right -20px
-    >.hp
-        position absolute
-        top -34px
-        left -5px
-        right -5px
-        height 8px
-        background #9a9a9a
-        opacity .7
-        >.bar
+    &.unit
+        >.name
             position absolute
-            top 0
-            left 0
+            top -22px
+            white-space nowrap
+            text-align center
+            color #fff
+            text-shadow 1px 1px 1px rgba(95, 95, 95, 0.4)
+            left -20px
+            right -20px
+        >.hp
+            position absolute
+            top -34px
+            left -5px
+            right -5px
             height 8px
-            background #ff2b2b
+            background #9a9a9a
+            opacity .7
+            >.bar
+                position absolute
+                top 0
+                left 0
+                height 8px
+                background #ff2b2b

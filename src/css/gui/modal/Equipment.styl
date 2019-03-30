@@ -1,0 +1,37 @@
+/**/
+
+$cellWH = 52px
+$cellPad = 5px
+$cellsPadTop = 20px
+
+#gui .modal.Equipment
+    top 5px
+    right 5px
+    width 233px
+    height 306px
+    >.body
+        position relative
+        >.cell
+            position absolute
+            width $cellWH
+            height $cellWH
+            line-height $cellWH
+            color #aaa
+            text-align center
+            font-size 11px
+            background rgba(0,0,0,.2)
+            left 50%
+            &.c1
+                margin-left -($cellWH / 2 + 1 * ($cellWH + $cellPad))
+            &.c2
+                margin-left -($cellWH / 2 + 0 * ($cellWH + $cellPad))
+            &.c3
+                margin-left +($cellWH / 2 + 0 * ($cellWH) + $cellPad)
+            &.r1
+                top ($cellsPadTop + $cellPad + 0 * ($cellWH + $cellPad))
+            &.r2
+                top ($cellsPadTop + $cellPad + 1 * ($cellWH + $cellPad))
+            &.r3
+                top ($cellsPadTop + $cellPad + 2 * ($cellWH + $cellPad))
+            &.r4
+                top ($cellsPadTop + $cellPad + 3 * ($cellWH + $cellPad))

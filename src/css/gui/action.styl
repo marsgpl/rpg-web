@@ -1,0 +1,24 @@
+/**/
+
+$cellWH = 60px
+$cellPad = 5px
+
+#gui>.action
+    position fixed
+    bottom $cellPad
+    width $cellWH
+    height $cellWH
+    line-height $cellWH
+    text-align center
+    color #fff
+    background rgba(0,0,0,.5)
+    border-radius 3px
+    cursor pointer
+    &.Stats
+        right ($cellPad + 3 * ($cellWH + $cellPad))
+    &.Equipment
+        right ($cellPad + 2 * ($cellWH + $cellPad))
+    &.Inventory
+        right ($cellPad + 1 * ($cellWH + $cellPad))
+    &.Chat
+        right ($cellPad + 0 * ($cellWH + $cellPad))

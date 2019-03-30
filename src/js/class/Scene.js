@@ -5,6 +5,7 @@ import {
     rotateDEG as mxRotate,
     skewDEG as mxSkew,
     applyToPoint as mxApplyToPoint,
+    inverse as mxInverse,
 } from "transformation-matrix"
 
 import {div} from "lib/helper"
@@ -36,27 +37,20 @@ export default class {
         this.isometric = {}
 
         // TODO: take from css?
-        this.isometric.matrix = mxCompose(
-            mxRotate(-45),
-            mxSkew(19, 19),
-        )
-    }
-
-    // TODO: rewrite this ugly unprecise function in a right way and remove hardcode
-    getTilePosByMouse(x, y) {
-        x += this.cartesian.offset[0]
-        y += this.cartesian.offset[1]
-
-        const isoY = (y*2 - 1/2 + x) / 2
-        const isoX = x - isoY
-
-        return [
-            Math.floor(isoX / (this.tileH * 0.950583)),
-            Math.floor(isoY / (this.tileH * 0.950583)),
-        ]
+        this.isometric.matrix = mxCompose(mxRotate(-45), mxSkew(19, 19))
+        this.isometric.matrixRe = mxInverse(this.isometric.matrix)
     }
 
     cartToIso = point => mxApplyToPoint(this.isometric.matrix, point)
+    isoToCart = point => mxApplyToPoint(this.isometric.matrixRe, point)
+    cartToPos = point => [
+        Math.floor(point[0] / TILE_W),
+        Math.floor(point[1] / TILE_H),
+    ]
+    mousePosToTilePos = (mouseX, mouseY) => this.cartToPos(this.isoToCart([
+        mouseX - this.cartesian.left,
+        mouseY - this.cartesian.top
+    ]))
 
     setCurrentPlayer(figureId) {
         this.currentPlayer = this.figures[figureId]
@@ -152,8 +146,8 @@ export default class {
 
         const s = this.isometric.node.style
 
-        s.width = this.isometric.width + "px"
-        s.height = this.isometric.height + "px"
+        // s.width = this.isometric.width + "px"
+        // s.height = this.isometric.height + "px"
 
         s.zIndex = 1
 
@@ -184,9 +178,10 @@ export default class {
 
         this.cartesian.offset = iso
 
-        const s = this.cartesian.node.style
+        this.cartesian.top = this.parentHeight / 2 - iso[1]
+        this.cartesian.left = this.parentWidth / 2 - iso[0]
 
-        s.top = this.parentHeight / 2 - iso[1] + "px"
-        s.left = this.parentWidth / 2 - iso[0] + "px"
+        this.cartesian.node.style.top = this.cartesian.top + "px"
+        this.cartesian.node.style.left = this.cartesian.left + "px"
     }
 }

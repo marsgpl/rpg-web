@@ -25,6 +25,10 @@ export default class {
             // other: 0
         this.extraZ = 0
 
+        // there are 5 layers within 1 tile "row", but for loot on ground z indexes
+        // must be always lower, so set it to 4 for loot
+        this.basicMulZ = 5
+
         this.classes = [ "figure" ]
     }
 
@@ -65,14 +69,29 @@ export default class {
     }
 
     drawModel = model => {
-        this.bg = {}
+        if ( this.bg ) {
+            if ( this.bg.angle !== this.angle ) {
+                this.bg.node.className = [ "bg", this.angle ].join(" ")
+            }
 
-        this.bg.node = div()
+            if ( this.bg.model != model ) {
+                this.bg.model = model
+                this.bg.node.innerHTML = model.svg
+// console.log("!!! innerHTML", Math.random())
+            }
+        } else {
+            this.bg = {}
 
-        this.bg.node.className = [ "bg", this.angle ].join(" ")
-        this.bg.node.innerHTML = model.svg // TODO: optimize?
+            this.bg.model = model
+            this.bg.angle = this.angle
+            this.bg.node = div()
 
-        this.node.appendChild(this.bg.node)
+            this.bg.node.className = [ "bg", this.angle ].join(" ")
+            this.bg.node.innerHTML = model.svg
+// console.log("innerHTML", Math.random())
+
+            this.node.appendChild(this.bg.node)
+        }
     }
 
     render(parentNode, tileW, tileH, cartToIso, figureBaseZ) {
@@ -97,7 +116,9 @@ export default class {
     }
 
     recalcZ(figureBaseZ) {
-        this.node.style.zIndex = figureBaseZ * 5 + (this.pos[1] - this.pos[0]) * 5 + this.extraZ
+        this.node.style.zIndex = figureBaseZ * this.basicMulZ
+            + (this.pos[1] - this.pos[0]) * this.basicMulZ
+            + this.extraZ
     }
 
     move(pos, angle, tileW, tileH, cartToIso) {
@@ -117,11 +138,16 @@ export default class {
         }
 
         if ( this.bg ) {
-            this.bg.node.className = [ "bg", this.angle ].join(" ")
+            if ( this.model.indexOf("JockMale")==0 ) {
+                this.model = "JockMale" + (this.angle=="e" ? "E" : "")
+            }
+            this.renderModel()
         }
 
-        iso[0] -= this.width / 2 - this.bgX * bgMulX
-        iso[1] -= this.height - this.bgY * bgMulY
+        const model = models[this.model]
+
+        iso[0] -= this.width / 2 - this.width * (model.bgX||0) * bgMulX
+        iso[1] -= this.height - this.height * (model.bgY||0) * bgMulY
 
         const s = this.node.style
 
@@ -136,9 +162,5 @@ export default class {
 
         this.width = width
         this.height = this.width / model.whf // px
-
-        // move whole figure with this offset to make background stand exactly on tile center
-        this.bgX = this.width * model.bgX
-        this.bgY = this.height * model.bgY
     }
 }

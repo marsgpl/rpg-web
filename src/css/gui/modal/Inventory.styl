@@ -1,0 +1,21 @@
+/**/
+
+$cellsInRow = 4
+$cellWH = 52px
+$cellPad = 5px
+
+#gui .modal.Inventory
+    top 316px
+    right 5px
+    >.body
+        padding $cellPad 0 0 $cellPad
+        box-sizing border-box
+        width ($cellsInRow * ($cellWH + $cellPad) + $cellPad)
+        >.cell
+            float left
+            width $cellWH
+            height $cellWH
+            margin 0 $cellPad $cellPad 0
+            background rgba(0,0,0,.2)
+        >.clear
+            clear both

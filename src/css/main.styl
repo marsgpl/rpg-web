@@ -24,6 +24,22 @@ body
     user-select none
     background #f7f7f7
 
+#gui
+    user-select none
+    position fixed
+    top 0
+    left 0
+    z-index 2
+
 @require "scene.styl"
 @require "figure.styl"
-@require "figures/*.styl"
+
+@require "model/Trader.styl"
+@require "model/Items.styl"
+
+@require "gui/action.styl"
+@require "gui/modal.styl"
+@require "gui/modal/Stats.styl"
+@require "gui/modal/Equipment.styl"
+@require "gui/modal/Inventory.styl"
+@require "gui/modal/Chat.styl"

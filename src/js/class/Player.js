@@ -2,9 +2,9 @@
 
 import Unit from "class/Unit"
 
-const MODEL = "ManJock"//"Man"
+const MODEL = "JockMale"
 const SPEED = .5
-const WIDTH = 55//46
+const WIDTH = 55
 
 export default class extends Unit {
     constructor(props) {

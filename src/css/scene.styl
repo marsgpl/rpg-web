@@ -1,23 +1,23 @@
 /**/
 
-.scene
+#mount .scene
     position absolute
+    width 0
+    height 0
     &.isometric
-        background #bdbdbd
-        transform-origin top left
-        transform rotate(-45deg) skew(19deg, 19deg)
         top 0
         left 0
+        transform-origin top left
+        transform rotate(-45deg) skew(19deg, 19deg)
         >.tile
             position absolute
             background-repeat repeat
             background-position center
             &.grass
                 background-color #5d865d
+            &.stone
+                background-color #5a5756
             &.debug
                 background-image url("../img/scene/grid.png")
                 background-position -0.25px -0.25px
                 background-size 32px 32px
-    &.cartesian
-        width 0
-        height 0
