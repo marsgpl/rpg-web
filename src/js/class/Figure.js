@@ -88,8 +88,8 @@ export default class {
 
     getCurrentModelName() {
         const suffix
-            = (this.angle[0]=="n") ? "N"
-            : (this.angle=="w" || this.angle=="e") ? "E"
+            = (this.angle=="n") ? "N"
+            : (this.angle=="w" || this.angle=="e" || this.angle=="nw" || this.angle=="ne") ? "E"
             : ""
 
         const modelName = this.model + suffix
@@ -128,6 +128,10 @@ export default class {
         }
 
         const model = this.bg && this.bg.model || models[this.model]
+
+        if ( this.model == "JockMale" && model.pose == "e" ) {
+            bgMulX = -bgMulX
+        }
 
         iso[0] -= this.width / 2 - this.width * (model.bgX||0) * bgMulX
         iso[1] -= this.height - this.height * (model.bgY||0) * bgMulY

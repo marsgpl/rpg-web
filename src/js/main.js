@@ -8,6 +8,10 @@ import Game from "class/Game"
 import Scene from "class/Scene"
 import Figure from "class/Figure"
 import Player from "class/Player"
+import Trader from "class/npc/Trader"
+import Rat from "class/mob/Rat"
+import RatQueen from "class/mob/RatQueen"
+
 import Helm from "class/item/Helm"
 import Sword from "class/item/Sword"
 import Jacket from "class/item/Jacket"
@@ -18,9 +22,7 @@ import Shirt from "class/item/Shirt"
 import Vest from "class/item/Vest"
 import Shield from "class/item/Shield"
 import ShieldRound from "class/item/ShieldRound"
-import Trader from "class/npc/Trader"
-import Rat from "class/mob/Rat"
-import RatQueen from "class/mob/RatQueen"
+import Crown from "class/item/Crown"
 
 import "../css/main.styl"
 
@@ -82,6 +84,12 @@ evl(document, "DOMContentLoaded", e => {
         level: 1,
         hp: [84,100],
     })
+    // const he = new Player({
+    //     pos: [scene.pos[0]+1, scene.pos[1]+1],
+    //     angle: "n",
+    //     name: "Noob",
+    //     level: 1,
+    // })
 
     const trader = new Trader({
         pos: [58,59],
@@ -140,12 +148,16 @@ evl(document, "DOMContentLoaded", e => {
     const shieldRound = new ShieldRound({
         pos: [52,63],
     })
+    const crown = new Crown({
+        pos: [52,65],
+    })
 
     game.addScene("Spawn", scene)
 
     let id = 1
 
     scene.addFigure(id++, me)
+    // scene.addFigure(id++, he)
     scene.addFigure(id++, trader)
     scene.addFigure(id++, ratQ)
     scene.addFigure(id++, rat1)
@@ -162,6 +174,7 @@ evl(document, "DOMContentLoaded", e => {
     scene.addFigure(id++, vest)
     scene.addFigure(id++, shield)
     scene.addFigure(id++, shieldRound)
+    scene.addFigure(id++, crown)
 
     scene.setCurrentPlayer(1)
 

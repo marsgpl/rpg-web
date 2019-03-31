@@ -2,8 +2,8 @@
 
 import Item from "class/Item"
 
-const MODEL = "Shield"
-const WIDTH = 35
+const MODEL = "Crown"
+const WIDTH = 25
 
 export default class extends Item {
     constructor(props) {
@@ -11,8 +11,10 @@ export default class extends Item {
 
         this.model = this.validateModelName(props.model || MODEL)
 
+        this.basicMulZ = 4
+
         this.calcWH(props.width || WIDTH)
 
-        this.classes.push("Shield")
+        this.classes.push("Crown")
     }
 }

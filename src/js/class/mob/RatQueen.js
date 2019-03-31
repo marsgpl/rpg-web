@@ -2,7 +2,7 @@
 
 import MobBoss from "class/MobBoss"
 
-const MODEL = "RatQueen"
+const MODEL = "Rat"
 const NAME = "Rat Queen"
 const LEVEL = 2
 const HP = [15,15]

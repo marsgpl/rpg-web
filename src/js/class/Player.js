@@ -4,7 +4,7 @@ import Unit from "class/Unit"
 
 const MODEL = "JockMale"
 const SPEED = .5
-const WIDTH = 55
+const HEIGHT = 150
 
 export default class extends Unit {
     constructor(props) {
@@ -13,7 +13,7 @@ export default class extends Unit {
         this.model = this.validateModelName(props.model || MODEL)
         this.speed = props.speed || SPEED
 
-        this.calcWH(props.width || WIDTH)
+        this.calcWH(0, props.height || HEIGHT)
 
         this.needRenderHp = true
         this.extraZ = 3
