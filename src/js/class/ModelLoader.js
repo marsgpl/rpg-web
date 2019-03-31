@@ -9,6 +9,10 @@ export default class {
         this.models = {}
     }
 
+    getModelByName(name) {
+        return models[name]
+    }
+
     load(name, cb) {
         const model = models[name] || models[DEFAULT_MODEL]
 
@@ -33,10 +37,20 @@ export default class {
         model.loaded = true
         model.svg = svg
 
+        // https://measurethat.net/Benchmarks/Show/4866/0/svg-parsing
         const parser = new DOMParser
         const node = parser.parseFromString(svg, "image/svg+xml")
 
         model.svgNode = node && node.firstChild
+
+        if ( model.svgNode ) {
+            model.svgNodeWear = model.svgNode.cloneNode(true)
+            model.svgNodeWear
+                .querySelectorAll("._back, ._back2, ._back3")
+                .forEach(node => node.remove())
+        }
+
+        model.viewBox = model.svgNode.getAttribute("viewBox").split(" ")
 
         for ( let cb of model.onLoad ) {
             cb(model)

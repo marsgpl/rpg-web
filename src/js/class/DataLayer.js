@@ -15,15 +15,15 @@ export default class {
         return player && player.equipment
     }
 
-    getEquipmentItem(name) {
-        return this.currentPlayer.equipment[name]
+    getEquipmentItem(slotName) {
+        return this.currentPlayer.equipment[slotName]
     }
 
-    removeEquippedItem(name) {
-        const item = this.getEquipmentItem(name)
+    removeEquippedItem(slotName) {
+        const item = this.getEquipmentItem(slotName)
 
         if ( item ) {
-            this.currentPlayer.equipment[name] = null
+            this.currentPlayer.equipment[slotName] = null
             return item
         }
     }
@@ -54,27 +54,34 @@ export default class {
             >= this.currentPlayer.inventory.size
     }
 
-    unequip(name) {
+    unequip(slotName) {
         if ( this.isInventoryFull() ) {
-            throw `Can't unequip item "${name}": inventory is full`
+            throw `Can't unequip slot "${slotName}": inventory is full`
         }
 
-        const item = this.removeEquippedItem(name)
+        const item = this.removeEquippedItem(slotName)
         if ( !item ) { return }
 
-        this.gui.modals.reRenderEquipmentCell(name)
+        this.gui.modals.reRenderEquipmentCell(slotName)
 
         this.putItemInInventory(item)
+
+        this.game.currentScene.currentPlayer.updateEquipmentItem(slotName)
     }
 
     unequipRaw(slotName) {
         return this.removeEquippedItem(slotName)
     }
 
+    equipRaw(slotName, item) {
+        this.currentPlayer.equipment[slotName] = item
+    }
+
     equipFromInventory(item) {
         const slotName = item.equip
-        const slotItem = this.getEquipmentItem(slotName)
+        if ( !slotName ) { return }
 
+        const slotItem = this.getEquipmentItem(slotName)
         if ( slotItem === undefined ) { return } // unknown slot name
 
         if ( slotItem ) {
@@ -85,10 +92,12 @@ export default class {
         item = this.removeItemFromInventory(item)
         if ( !item ) { return } // item is not in inventory
 
-        this.currentPlayer.equipment[slotName] = item
+        this.equipRaw(slotName, item)
 
         this.gui.modals.reRenderEquipmentCell(slotName)
         this.gui.modals.reRenderInventory()
+
+        this.game.currentScene.currentPlayer.updateEquipmentItem(slotName)
 
         return true
     }

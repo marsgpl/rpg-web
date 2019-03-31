@@ -56,7 +56,7 @@ export default class {
                 this.applyLook(this.bg.node.firstChild, this.look)
 
                 if ( this.applyEquipment ) {
-                    this.applyEquipment(this.bg.node)
+                    this.applyEquipment()
                 }
 
                 needRecalc = true
@@ -74,7 +74,7 @@ export default class {
             this.applyLook(this.bg.node.firstChild, this.look)
 
             if ( this.applyEquipment ) {
-                this.applyEquipment(this.bg.node)
+                this.applyEquipment()
             }
 
             this.node.appendChild(this.bg.node)
@@ -170,14 +170,16 @@ export default class {
         }
     }
 
-    applyLook(parentNode, look) {
+    applyLook(parentNode, look, noBack = false) {
         if ( !look ) { return }
 
-        for ( let className in this.look ) {
+        for ( let className in look ) {
+            if ( noBack && className.indexOf("_back")===0 ) { continue }
+
             let node = parentNode.querySelector("." + className)
 
             if ( node ) {
-                let props = this.look[className]
+                let props = look[className]
 
                 for ( let prop in props ) {
                     node.style[prop] = props[prop]

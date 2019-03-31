@@ -12,7 +12,7 @@ export default {
 
     Boots: {
         url: require("../../img/model/item/Boots.svg"),
-        whf: 358 / 355,
+        whf: 353 / 356,
         bgX: -.1,
         bgY: .2,
     },

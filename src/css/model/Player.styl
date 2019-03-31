@@ -2,27 +2,64 @@
 
 #mount .figure.unit.Player
     >.bg
-        >svg
+        svg:first-child
             position absolute
-            &:first-child
-                position static
-                height 100%
-        &.e
-        &.ne
-            transform none
+            top 0
         &.w
         &.nw
             transform scale(-1,1)
         &.e
-        &.w
         &.ne
-        &.nw
-            svg
+            transform none
+        svg
+            &.wear
                 position absolute
-                left 34%
-                height 94%
-                top 1%
-        &.n
-            svg
-                position absolute
-                top -2.34%
+                left 50%
+    &.model-JockMale
+        >.bg
+            &.e
+            &.w
+            &.ne
+            &.nw
+                svg:first-child
+                    left 34%
+                    height 94%
+            &.n
+                svg:first-child
+                    top 1.34%
+            >svg
+                &.wear
+                    width 0
+                    max-width none
+                    max-height none
+                    // opacity .7
+                &.model-Pants
+                    top 42%
+                    margin-left -26%
+                    width 55%
+                &.model-Boots
+                    top 75%
+                    margin-left -40%
+                    width 70%
+                    opacity .3
+                &.model-Shirt
+                    top 14.2%
+                    margin-left -50%
+                    width 102%
+                &.model-Jacket
+                    top 14%
+                    margin-left -48%
+                    width 96%
+                &.model-Crown
+                    top -5.1%
+                    margin-left -18%
+                    width 36%
+                &.model-Bands
+                    top 36%
+                    margin-left -50%
+                    width 102%
+                /*Shield*/
+                /*ShieldRound*/
+                /*Sword*/
+                /*Helm*/
+                /*Jacket*/

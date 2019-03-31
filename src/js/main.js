@@ -48,11 +48,6 @@ evl(document, "DOMContentLoaded", e => {
                     ],
                 },
                 equipment: {
-                    Helm: new Crown,
-                    Shirt: new Shirt,
-                    Chest: new Jacket,
-                    Sword: new Sword,
-                    Shield: new ShieldRound,
                     Ring: null,
                     Pants: new Pants({
                         look: {
@@ -62,19 +57,24 @@ evl(document, "DOMContentLoaded", e => {
                             _back3: { fill: "#ddd" },
                         },
                     }),
-                    Bands: new Bands({
-                        look: {
-                            _front: { fill: "#ddd" },
-                            _back: { fill: "#888" },
-                            _back2: { fill: "#ddd" },
-                        },
-                    }),
                     Boots: new Boots({
                         look: {
-                            _front: { fill: "#888" },
-                            _back: { fill: "#aaa" },
+                            _front: { fill: "#000" },
+                            _back: { fill: "#999" },
                         },
                     }),
+                    Shirt: new Shirt,
+                    Chest: new Jacket,
+                    Helm: new Crown,
+                    Bands: new Bands({
+                        look: {
+                            _front: { fill: "#000" },
+                            _back: { fill: "#999" },
+                            _back2: { fill: "#999" },
+                        },
+                    }),
+                    Sword: new Sword,
+                    Shield: new ShieldRound,
                 },
             },
         },
