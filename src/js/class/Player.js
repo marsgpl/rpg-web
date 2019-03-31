@@ -110,7 +110,7 @@ export default class extends Unit {
         const panties = this.bg.node.firstChild.querySelector("._panties")
         if ( !panties ) { return }
 
-        this.panties.removed = false
+        this.panties.removed = !!this.bg.node.querySelector(`.wear.Pants.model-Pants`)
 
         if ( this.panties.removed ) {
             panties.style.fill = "none"

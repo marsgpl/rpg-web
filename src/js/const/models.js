@@ -66,7 +66,7 @@ export default {
     },
     Bands: {
         url: require("../../img/model/item/Bands.svg"),
-        whf: 535 / 173,
+        whf: 548 / 179,
         bgX: -.15,
         bgY: .3,
     },

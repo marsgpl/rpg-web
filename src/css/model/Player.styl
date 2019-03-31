@@ -8,6 +8,7 @@
         &.w
         &.nw
             transform scale(-1,1)
+        &.n
         &.e
         &.ne
             transform none
@@ -15,6 +16,9 @@
             &.wear
                 position absolute
                 left 50%
+                width 0
+                max-width none
+                max-height none
     &.model-JockMale
         >.bg
             &.e
@@ -27,39 +31,56 @@
             &.n
                 svg:first-child
                     top 1.34%
-            >svg
-                &.wear
-                    width 0
-                    max-width none
-                    max-height none
-                    // opacity .7
-                &.model-Pants
-                    top 42%
-                    margin-left -26%
-                    width 55%
-                &.model-Boots
-                    top 75%
-                    margin-left -40%
-                    width 70%
-                    opacity .3
-                &.model-Shirt
-                    top 14.2%
-                    margin-left -50%
-                    width 102%
-                &.model-Jacket
-                    top 14%
-                    margin-left -48%
-                    width 96%
-                &.model-Crown
-                    top -5.1%
-                    margin-left -18%
-                    width 36%
-                &.model-Bands
-                    top 36%
-                    margin-left -50%
-                    width 102%
-                /*Shield*/
-                /*ShieldRound*/
-                /*Sword*/
-                /*Helm*/
-                /*Jacket*/
+            &.s
+            &.se
+            &.sw
+                >svg
+                    &.model-Pants
+                        top 42%
+                        margin-left -26%
+                        width 55%
+                    &.model-Boots
+                        top 75%
+                        margin-left -40%
+                        width 70%
+                    &.model-Shirt
+                        top 14.2%
+                        margin-left -50%
+                        width 102%
+                    &.model-Jacket
+                        top 14%
+                        margin-left -48%
+                        width 96%
+                    &.model-Vest
+                        top 14%
+                        margin-left -48%
+                        width 96%
+                    &.model-Crown
+                        top -5.1%
+                        margin-left -18%
+                        width 36%
+                    &.model-Helm
+                        top -0.7%
+                        margin-left -14%
+                        width 28%
+                    &.model-Bands
+                        top 36%
+                        margin-left -50%
+                        width 102%
+                    &.model-Shield
+                        top 23%
+                        margin-left -5%
+                        width 83%
+                        transform rotate(-13deg) skew(-4deg, -10deg)
+                    &.model-ShieldRound
+                        top 27%
+                        margin-left -10%
+                        width 92%
+                        transform rotate(-48deg) skew(-8deg, -7deg)
+                    &.model-Sword
+                        top 41%
+                        margin-left -33%
+                        width 25%
+                        transform rotate(129deg) skew(-24deg, -4deg)
+                        ._handle
+                            display none

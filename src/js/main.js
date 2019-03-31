@@ -70,7 +70,7 @@ evl(document, "DOMContentLoaded", e => {
                         look: {
                             _front: { fill: "#000" },
                             _back: { fill: "#999" },
-                            _back2: { fill: "#999" },
+                            _back2: { fill: "#000" },
                         },
                     }),
                     Sword: new Sword,
@@ -117,7 +117,7 @@ evl(document, "DOMContentLoaded", e => {
 
     const me = new Player({
         pos: scene.pos,
-        angle: "se",
+        angle: "sw",
         name: "You",
         level: 1,
         hp: [84,100],
