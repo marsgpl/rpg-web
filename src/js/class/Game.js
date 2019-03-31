@@ -1,11 +1,11 @@
 //
 
-import {evl} from "lib/helper"
+import {evl,purge} from "lib/helper"
 
 export default class {
-    constructor(rootNode, data, modelLoader) {
+    constructor(rootNode, dataLayer, modelLoader) {
         this.node = rootNode
-        this.data = data
+        this.dataLayer = dataLayer
         this.modelLoader = modelLoader
 
         const css = getComputedStyle(this.node)
@@ -32,7 +32,7 @@ export default class {
             throw `Scene not found by id: "${sceneId}"`
         }
 
-        this.purgeContent(this.node)
+        purge(this.node)
 
         this.currentScene.render(
             this.node,
@@ -40,14 +40,6 @@ export default class {
             this.height,
             sceneId,
         )
-    }
-
-    purgeContent(node) {
-        let first
-
-        while ( first = node.firstChild ) {
-            node.removeChild(first)
-        }
     }
 
     onClick = e => {

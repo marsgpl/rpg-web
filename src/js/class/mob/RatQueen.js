@@ -7,7 +7,7 @@ const NAME = "Rat Queen"
 const LEVEL = 2
 const HP = [15,15]
 const SPEED = 1
-const WIDTH = 160
+const HEIGHT = 87
 
 export default class extends MobBoss {
     constructor(props) {
@@ -19,7 +19,7 @@ export default class extends MobBoss {
         this.hp = props.hp || HP
         this.speed = props.speed || SPEED
 
-        this.calcWH(props.width || WIDTH)
+        this.calcWH(props.width, props.height || HEIGHT)
 
         this.classes.push("RatQueen")
     }

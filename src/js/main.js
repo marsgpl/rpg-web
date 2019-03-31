@@ -2,6 +2,7 @@
 
 import {evl} from "lib/helper"
 
+import DataLayer from "class/DataLayer"
 import GUI from "gui/GUI"
 import ModelLoader from "class/ModelLoader"
 import Game from "class/Game"
@@ -31,40 +32,121 @@ evl(document, "DOMContentLoaded", e => {
         currentPlayer: {
             inventory: {
                 size: 12,
-                items: [],
+                items: [
+                    {  },
+                    {  },
+                    {  },
+                    {  },
+                    { equip: "Helm", model: "Helm" },
+                ],
             },
             equipment: {
-                Helm: null,
-                Shirt: {
-                    model: "Shirt",
-                    color: "#dddddd",
+                Helm: {
+                    equip: "Helm",
+                    // model: "Helm",
+                    // style: {
+                    //     _front: { fill: "red" },
+                    //     _stripe: { fill: "gray" },
+                    //     _bird: { fill: "white" },
+                    // },
+                    model: "Crown",
                 },
-                Sword: null,
-                Vest: null,
-                Shield: null,
+                Shirt: {
+                    equip: "Shirt",
+                    model: "Shirt",
+                    // style: {
+                    //     _front: { fill: "#fff" },
+                    //     _back: { fill: "#eee" },
+                    //     _string: { stroke: "black" },
+                    // },
+                },
+                Vest: {
+                    equip: "Vest",
+                    // model: "Vest",
+                    // style: {
+                    //     _front: { fill: "red" },
+                    //     _back: { fill: "yellow" },
+                    //     _belt: { fill: "black" },
+                    //     _buckle: { stroke: "white" },
+                    // },
+                    model: "Jacket",
+                },
+                Sword: {
+                    equip: "Sword",
+                    model: "Sword",
+                    // style: {
+                    //     _handle: { fill: "red" },
+                    // },
+                },
+                Shield: {
+                    equip: "Shield",
+                    // model: "Shield",
+                    // style: {
+                    //     _front: { fill: "red", stroke: "white" },
+                    //     _stripes: { fill: "red", stroke: "white" },
+                    //     _stripe: { stroke: "white" },
+                    // },
+                    model: "ShieldRound",
+                    // style: {
+                    //     _front: { fill: "red", stroke: "white" },
+                    //     _center: { fill: "white", stroke: "gray" },
+                    // },
+                },
                 Ring: null,
-                Pants: null,
-                Bands: null,
-                Boots: null,
+                Pants: {
+                    equip: "Pants",
+                    model: "Pants",
+                    // style: {
+                    //     _front: { fill: "#fff" },
+                    //     _back: { fill: "#eee" },
+                    // },
+                    style: {
+                        _front: { fill: "#eee" },
+                        _back: { fill: "#ddd" },
+                    },
+                },
+                Bands: {
+                    equip: "Bands",
+                    model: "Bands",
+                    style: {
+                        _front: { fill: "#ddd" },
+                        _front2: { fill: "#ddd" },
+                        _back: { fill: "#888" },
+                    },
+                },
+                Boots: {
+                    equip: "Boots",
+                    model: "Boots",
+                    style: {
+                        _front: { fill: "#888" },
+                        _back: { fill: "#aaa" },
+                    },
+                },
             }
         }
     }
 
+    const dataLayer = new DataLayer(data)
+
     const modelLoader = new ModelLoader
 
-    const gui = new GUI(document.querySelector("#gui"), data, modelLoader)
+    const gui = new GUI(document.querySelector("#gui"), dataLayer, modelLoader)
 
-    gui.addAction("Stats")
-    gui.addAction("Equipment")
-    gui.addAction("Inventory")
+    dataLayer.bindGui(gui)
+
     gui.addAction("Chat")
+    gui.addAction("Inventory")
+    gui.addAction("Equipment")
+    gui.addAction("Stats")
 
-    gui.showModal("Stats")
+    gui.showAction("Stats")
     gui.showModal("Equipment")
     gui.showModal("Inventory")
-    gui.showModal("Chat")
+    gui.showAction("Chat")
 
-    const game = new Game(document.querySelector("#mount"), data, modelLoader)
+    const game = new Game(document.querySelector("#mount"), dataLayer, modelLoader)
+
+    dataLayer.bindGame(game)
 
     const scene = new Scene({
         width: 128,
@@ -106,6 +188,7 @@ evl(document, "DOMContentLoaded", e => {
         hp: [4,5],
     })
     const rat2 = new Rat({
+        model: "Lol",
         pos: [51,77],
         angle: "w",
     })

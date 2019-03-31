@@ -4,9 +4,9 @@ import Actions from "gui/Actions"
 import Modals from "gui/Modals"
 
 export default class {
-    constructor(rootNode, data, modelLoader) {
+    constructor(rootNode, dataLayer, modelLoader) {
         this.node = rootNode
-        this.data = data
+        this.dataLayer = dataLayer
         this.modelLoader = modelLoader
 
         this.actions = new Actions(this)

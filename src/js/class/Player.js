@@ -13,7 +13,7 @@ export default class extends Unit {
         this.model = this.validateModelName(props.model || MODEL)
         this.speed = props.speed || SPEED
 
-        this.calcWH(0, props.height || HEIGHT)
+        this.calcWH(props.width, props.height || HEIGHT)
 
         this.needRenderHp = true
         this.extraZ = 3

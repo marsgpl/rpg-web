@@ -7,7 +7,7 @@ const NAME = "Giant Rat"
 const LEVEL = 1
 const HP = [5,5]
 const SPEED = 1.5
-const WIDTH = 110
+const HEIGHT = 60
 
 export default class extends Mob {
     constructor(props) {
@@ -19,7 +19,7 @@ export default class extends Mob {
         this.hp = props.hp || HP
         this.speed = props.speed || SPEED
 
-        this.calcWH(props.width || WIDTH)
+        this.calcWH(props.width, props.height || HEIGHT)
 
         this.classes.push("Rat")
     }

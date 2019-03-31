@@ -11,10 +11,12 @@ $cellPad = 5px
         box-sizing border-box
         width ($cellsInRow * ($cellWH + $cellPad) + $cellPad)
         >.cell
+            position relative
             float left
             width $cellWH
             height $cellWH
             margin 0 $cellPad $cellPad 0
             background rgba(0,0,0,.2)
+            overflow hidden
         >.clear
             clear both

@@ -1,14 +1,36 @@
 /**/
 
 $cellWH = 52px
-$cellPad = 5px
+$cellPadding = 5px
+$cellMargin = 5px
 $cellsPadTop = 20px
+
+#gui .modal
+    &.Equipment
+    &.Inventory
+        >.body
+            >.cell
+                &.pointer
+                    cursor pointer
+                &.model-Sword
+                    svg
+                        transform translateX(-50%) translateY(-50%) rotate(180deg)
+                        width 220%
+                        height 220%
+                        top 130%
+                svg
+                    position absolute
+                    top 50%
+                    left 50%
+                    width 78%
+                    height 78%
+                    transform translateX(-50%) translateY(-50%)
 
 #gui .modal.Equipment
     top 5px
     right 5px
     width 233px
-    height 306px
+    height 311px
     >.body
         position relative
         >.cell
@@ -21,17 +43,44 @@ $cellsPadTop = 20px
             font-size 11px
             background rgba(0,0,0,.2)
             left 50%
+            overflow hidden
             &.c1
-                margin-left -($cellWH / 2 + 1 * ($cellWH + $cellPad))
+                margin-left -($cellWH / 2 + 1 * ($cellWH + $cellMargin))
             &.c2
-                margin-left -($cellWH / 2 + 0 * ($cellWH + $cellPad))
+                margin-left -($cellWH / 2 + 0 * ($cellWH + $cellMargin))
             &.c3
-                margin-left +($cellWH / 2 + 0 * ($cellWH) + $cellPad)
+                margin-left +($cellWH / 2 + 0 * ($cellWH) + $cellMargin)
             &.r1
-                top ($cellsPadTop + $cellPad + 0 * ($cellWH + $cellPad))
+                top ($cellsPadTop + $cellMargin + 0 * ($cellWH + $cellMargin))
             &.r2
-                top ($cellsPadTop + $cellPad + 1 * ($cellWH + $cellPad))
+                top ($cellsPadTop + $cellMargin + 1 * ($cellWH + $cellMargin))
             &.r3
-                top ($cellsPadTop + $cellPad + 2 * ($cellWH + $cellPad))
+                top ($cellsPadTop + $cellMargin + 2 * ($cellWH + $cellMargin))
             &.r4
-                top ($cellsPadTop + $cellPad + 3 * ($cellWH + $cellPad))
+                top ($cellsPadTop + $cellMargin + 3 * ($cellWH + $cellMargin))
+            &.Shirt
+                z-index 1
+            &.Vest
+                background none
+                z-index 2
+            &.model-Shield
+                svg
+                    transform translateX(-50%) translateY(-50%) rotate(15deg)
+                    width 120%
+                    height 120%
+                    top 73%
+                    left 46%
+            &.Helm
+                svg
+                    width 48%
+                    height 48%
+            &.Boots
+                svg
+                    width 68%
+                    height 68%
+                    left 45%
+            &.Pants
+                svg
+                    width 110%
+                    height 110%
+                    top 65%

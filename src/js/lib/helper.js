@@ -11,3 +11,11 @@ export function div() {
 export function evl(node, eventName, cb) {
     node.addEventListener(eventName, cb)
 }
+
+export function purge(node) {
+    let first
+
+    while ( first = node.firstChild ) {
+        node.removeChild(first)
+    }
+}

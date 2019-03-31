@@ -1,12 +1,12 @@
 //
 
-import {evl,div} from "lib/helper"
+import {evl,div,purge} from "lib/helper"
 
 const MARGIN = 5
 
 const EQUIPMENT_CELL_POS = {
     Helm: "c2 r1",
-    Shirt: "c3 r1",
+    Shirt: "c2 r2",
     Sword: "c1 r2",
     Vest: "c2 r2",
     Shield: "c3 r2",
@@ -113,29 +113,139 @@ export default class {
 
     renderBodyEquipment(modal) {
         for ( let name in EQUIPMENT_CELL_POS ) {
-            let cell = div()
+            this.renderBodyEquipmentCell(modal, name)
+        }
+    }
 
-            cell.className = [ "cell", name, EQUIPMENT_CELL_POS[name] ].join(" ")
+    renderBodyEquipmentCell(modal, name) {
+        let cell = div()
 
-            if ( this.gui.data.currentPlayer.equipment[name] ) {
-                //
+        cell.className = [ "cell", name, EQUIPMENT_CELL_POS[name] ].join(" ")
+
+        const item = this.gui.dataLayer.getEquipmentItem(name)
+
+        if ( item ) {
+            this.gui.modelLoader.load(item.model, this.renderEquipmentCell.bind(this, name, cell))
+        } else {
+            if ( name == "Vest" ) {
+                return // do not add empty Vest cell
+            } else if ( name == "Shirt" ) {
+                if ( !this.gui.dataLayer.getEquipmentItem("Vest") ) {
+                    cell.textContent = "Chest"
+                }
             } else {
                 cell.textContent = name
             }
+        }
 
-            modal.body.appendChild(cell)
+        modal.body.appendChild(cell)
+        modal.cells = modal.cells || {}
+        modal.cells[name] = cell
+    }
+
+    renderEquipmentCell(name, cell, model) {
+        const item = this.gui.dataLayer.getEquipmentItem(name)
+
+        cell.className += " model-" + item.model + " pointer"
+        cell.innerHTML = model.svg
+
+        this.colorItemCell(item, cell)
+
+        if ( (name=="Vest" && this.gui.dataLayer.getEquipmentItem("Shirt"))
+            || (name=="Shirt" && this.gui.dataLayer.getEquipmentItem("Vest"))
+        ) {
+            let node = this.modals.Equipment.cells.Vest
+                && this.modals.Equipment.cells.Vest.querySelector("._back")
+
+            if ( node ) {
+                node.style.fill = "none"
+            }
+        }
+
+        evl(cell, "click", this.unequip.bind(this, name))
+    }
+
+    colorItemCell(item, cell) {
+        if ( item.style ) {
+            for ( let className in item.style ) {
+                let node = cell.querySelector("." + className)
+
+                if ( node ) {
+                    let props = item.style[className]
+
+                    for ( let prop in props ) {
+                        node.style[prop] = props[prop]
+                    }
+                }
+            }
+        }
+    }
+
+    unequip(name) {
+        try {
+            this.gui.dataLayer.unequip(name)
+        } catch (err) {
+            alert(err)
+        }
+    }
+
+    reRenderEquipmentCell(name) {
+        const modal = this.modals.Equipment
+        const cell = modal && modal.cells[name]
+
+        if ( !cell ) { return }
+
+        cell.remove()
+        this.renderBodyEquipmentCell(modal, name)
+
+        if ( name == "Vest" ) {
+            this.reRenderEquipmentCell("Shirt")
         }
     }
 
     renderBodyInventory(modal) {
-        for ( let i=0; i<this.gui.data.currentPlayer.inventory.size; ++i ) {
+        for ( let i=0; i<this.gui.dataLayer.getInventorySize(); ++i ) {
             let cell = div()
             cell.className = "cell"
+
+            let item = this.gui.dataLayer.getInventoryItem(i)
+
+            if ( item ) {
+                this.gui.modelLoader.load(item.model, this.renderInventoryItem.bind(this, cell, item))
+            }
+
             modal.body.appendChild(cell)
         }
 
         const clear = div()
         clear.className = "clear"
         modal.body.appendChild(clear)
+    }
+
+    renderInventoryItem(cell, item, model) {
+        cell.className += " model-" + item.model + " pointer"
+        cell.innerHTML = model.svg
+
+        this.colorItemCell(item, cell)
+
+        evl(cell, "click", this.inventoryItemOnClick.bind(this, item))
+    }
+
+    inventoryItemOnClick(item) {
+        const wasEquipped = this.gui.dataLayer.equipFromInventory(item)
+
+        if ( !wasEquipped ) {
+            alert("item info: " + item.model)
+        }
+    }
+
+    reRenderInventory() {
+        const modal = this.modals.Inventory
+
+        if ( !modal ) { return }
+
+        purge(modal.body)
+
+        this.renderBodyInventory(modal)
     }
 }
