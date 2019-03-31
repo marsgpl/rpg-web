@@ -188,7 +188,8 @@ evl(document, "DOMContentLoaded", e => {
         hp: [4,5],
     })
     const rat2 = new Rat({
-        model: "Lol",
+        model: "111",
+        name: "Rat in a box",
         pos: [51,77],
         angle: "w",
     })
