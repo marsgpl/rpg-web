@@ -3,7 +3,7 @@
 import Unit from "class/Unit"
 
 const MODEL = "JockMale"
-const SPEED = .5
+const SPEED = .3
 const HEIGHT = 150
 
 export default class extends Unit {
