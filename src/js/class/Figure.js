@@ -1,6 +1,6 @@
 //
 
-import {div} from "lib/helper"
+import {div,purge} from "lib/helper"
 import models from "const/models"
 
 const DEFAULT_MODEL = "Default"
@@ -9,10 +9,11 @@ const ANGLE = "s"
 const HEIGHT = 30 // px
 
 export default class {
-    constructor(props) {
+    constructor(props = {}) {
         this.model = this.validateModelName(props.model)
         this.pos = props.pos || POS
         this.angle = props.angle || ANGLE
+        this.look = props.look
 
         this.calcWH(props.width, props.height || HEIGHT)
 
@@ -48,7 +49,16 @@ export default class {
 
             if ( this.bg.model != model ) {
                 this.bg.model = model
-                this.bg.node.innerHTML = model.svg
+
+                purge(this.bg.node)
+                this.bg.node.appendChild(model.svgNode.cloneNode(true))
+
+                this.applyLook(this.bg.node.firstChild, this.look)
+
+                if ( this.applyEquipment ) {
+                    this.applyEquipment(this.bg.node)
+                }
+
                 needRecalc = true
             }
         } else {
@@ -59,7 +69,13 @@ export default class {
             this.bg.node = div()
 
             this.bg.node.className = [ "bg", this.angle ].join(" ")
-            this.bg.node.innerHTML = model.svg
+            this.bg.node.appendChild(model.svgNode.cloneNode(true))
+
+            this.applyLook(this.bg.node.firstChild, this.look)
+
+            if ( this.applyEquipment ) {
+                this.applyEquipment(this.bg.node)
+            }
 
             this.node.appendChild(this.bg.node)
 
@@ -81,7 +97,9 @@ export default class {
 
         this.node.className = this.classes.join(" ")
 
-        this.renderDetails(this.node)
+        if ( this.renderDetails ) {
+            this.renderDetails(this.node)
+        }
 
         parentNode.appendChild(this.node)
     }
@@ -140,8 +158,6 @@ export default class {
         this.node.style.left = iso[0] + "px"
     }
 
-    renderDetails(parentNode) {}
-
     calcWH(width = 0, height = 0) {
         const model = models[this.model]
 
@@ -151,6 +167,22 @@ export default class {
         } else if ( height ) {
             this.height = height
             this.width = this.height * model.whf
+        }
+    }
+
+    applyLook(parentNode, look) {
+        if ( !look ) { return }
+
+        for ( let className in this.look ) {
+            let node = parentNode.querySelector("." + className)
+
+            if ( node ) {
+                let props = this.look[className]
+
+                for ( let prop in props ) {
+                    node.style[prop] = props[prop]
+                }
+            }
         }
     }
 }

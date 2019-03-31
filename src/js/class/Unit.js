@@ -10,7 +10,7 @@ const SPEED = 1 // more - slower, seconds to move from one tile to another
 const DIAGONAL_SPEED_FACTOR = 1.4142135623730951
 
 export default class extends Figure {
-    constructor(props) {
+    constructor(props = {}) {
         super(props)
 
         this.name = props.name || this.model

@@ -7,7 +7,7 @@ const NAME = "Trader"
 const WIDTH = 44
 
 export default class extends Npc {
-    constructor(props) {
+    constructor(props = {}) {
         super(props)
 
         this.model = this.validateModelName(props.model || MODEL)

@@ -10,7 +10,7 @@ const SPEED = 1.5
 const HEIGHT = 60
 
 export default class extends Mob {
-    constructor(props) {
+    constructor(props = {}) {
         super(props)
 
         this.model = this.validateModelName(props.model || MODEL)

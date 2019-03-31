@@ -33,6 +33,11 @@ export default class {
         model.loaded = true
         model.svg = svg
 
+        const parser = new DOMParser
+        const node = parser.parseFromString(svg, "image/svg+xml")
+
+        model.svgNode = node && node.firstChild
+
         for ( let cb of model.onLoad ) {
             cb(model)
         }

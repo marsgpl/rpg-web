@@ -2,8 +2,11 @@
 
 #mount .figure.unit.Player
     >.bg
-        svg
-            height 100%
+        >svg
+            position absolute
+            &:first-child
+                position static
+                height 100%
         &.e
         &.ne
             transform none

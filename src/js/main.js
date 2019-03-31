@@ -29,104 +29,60 @@ import "../css/main.styl"
 
 evl(document, "DOMContentLoaded", e => {
     const data = {
-        currentPlayer: {
-            inventory: {
-                size: 12,
-                items: [
-                    {  },
-                    {  },
-                    {  },
-                    {  },
-                    { equip: "Helm", model: "Helm" },
-                ],
+        players: {
+            1: {
+                inventory: {
+                    size: 12,
+                    items: [
+                        new Helm,
+                        new Vest,
+                        new Rat,
+                        new Sword({
+                            look: {
+                                _handle: { fill:"red" },
+                                _guard: { fill:"yellow" },
+                                _balance: { fill:"yellow" },
+                            }
+                        }),
+                        new Shield,
+                    ],
+                },
+                equipment: {
+                    Helm: new Crown,
+                    Shirt: new Shirt,
+                    Chest: new Jacket,
+                    Sword: new Sword,
+                    Shield: new ShieldRound,
+                    Ring: null,
+                    Pants: new Pants({
+                        look: {
+                            _front: { fill: "#ddd" },
+                            _back: { fill: "#aaa" },
+                            _back2: { fill: "#ddd" },
+                            _back3: { fill: "#ddd" },
+                        },
+                    }),
+                    Bands: new Bands({
+                        look: {
+                            _front: { fill: "#ddd" },
+                            _back: { fill: "#888" },
+                            _back2: { fill: "#ddd" },
+                        },
+                    }),
+                    Boots: new Boots({
+                        look: {
+                            _front: { fill: "#888" },
+                            _back: { fill: "#aaa" },
+                        },
+                    }),
+                },
             },
-            equipment: {
-                Helm: {
-                    equip: "Helm",
-                    // model: "Helm",
-                    // style: {
-                    //     _front: { fill: "red" },
-                    //     _stripe: { fill: "gray" },
-                    //     _bird: { fill: "white" },
-                    // },
-                    model: "Crown",
-                },
-                Shirt: {
-                    equip: "Shirt",
-                    model: "Shirt",
-                    // style: {
-                    //     _front: { fill: "#fff" },
-                    //     _back: { fill: "#eee" },
-                    //     _string: { stroke: "black" },
-                    // },
-                },
-                Vest: {
-                    equip: "Vest",
-                    // model: "Vest",
-                    // style: {
-                    //     _front: { fill: "red" },
-                    //     _back: { fill: "yellow" },
-                    //     _belt: { fill: "black" },
-                    //     _buckle: { stroke: "white" },
-                    // },
-                    model: "Jacket",
-                },
-                Sword: {
-                    equip: "Sword",
-                    model: "Sword",
-                    // style: {
-                    //     _handle: { fill: "red" },
-                    // },
-                },
-                Shield: {
-                    equip: "Shield",
-                    // model: "Shield",
-                    // style: {
-                    //     _front: { fill: "red", stroke: "white" },
-                    //     _stripes: { fill: "red", stroke: "white" },
-                    //     _stripe: { stroke: "white" },
-                    // },
-                    model: "ShieldRound",
-                    // style: {
-                    //     _front: { fill: "red", stroke: "white" },
-                    //     _center: { fill: "white", stroke: "gray" },
-                    // },
-                },
-                Ring: null,
-                Pants: {
-                    equip: "Pants",
-                    model: "Pants",
-                    // style: {
-                    //     _front: { fill: "#fff" },
-                    //     _back: { fill: "#eee" },
-                    // },
-                    style: {
-                        _front: { fill: "#eee" },
-                        _back: { fill: "#ddd" },
-                    },
-                },
-                Bands: {
-                    equip: "Bands",
-                    model: "Bands",
-                    style: {
-                        _front: { fill: "#ddd" },
-                        _front2: { fill: "#ddd" },
-                        _back: { fill: "#888" },
-                    },
-                },
-                Boots: {
-                    equip: "Boots",
-                    model: "Boots",
-                    style: {
-                        _front: { fill: "#888" },
-                        _back: { fill: "#aaa" },
-                    },
-                },
-            }
-        }
+        },
     }
 
     const dataLayer = new DataLayer(data)
+
+    dataLayer.setCurrentPlayer(1)
 
     const modelLoader = new ModelLoader
 
@@ -219,6 +175,12 @@ evl(document, "DOMContentLoaded", e => {
     })
     const pants = new Pants({
         pos: [54,66],
+        look: {
+            _front: { fill: "#ddd" },
+            _back: { fill: "#aaa" },
+            _back2: { fill: "#ddd" },
+            _back3: { fill: "#ddd" },
+        },
     })
     const shirt = new Shirt({
         pos: [52,57],

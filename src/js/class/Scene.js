@@ -21,7 +21,7 @@ const TILE_W = 32 // px
 const TILE_H = 32 // px
 
 export default class {
-    constructor(props) {
+    constructor(props = {}) {
         this.width = props.width || WIDTH
         this.height = props.height || HEIGHT
         this.pos = props.pos || POS
@@ -72,6 +72,7 @@ export default class {
     addFigure(figureId, figure) {
         this.figures[figureId] = figure
         figure.scene = this
+        figure.id = figureId
     }
 
     renderFigure(figureId) {

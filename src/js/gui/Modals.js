@@ -6,10 +6,10 @@ const MARGIN = 5
 
 const EQUIPMENT_CELL_POS = {
     Helm: "c2 r1",
-    Shirt: "c2 r2",
     Sword: "c1 r2",
-    Vest: "c2 r2",
     Shield: "c3 r2",
+    Shirt: "c2 r2",
+    Chest: "c2 r2",
     Ring: "c1 r3",
     Pants: "c2 r3",
     Bands: "c3 r3",
@@ -33,10 +33,11 @@ export default class {
         modal.node = div()
         modal.node.className = [ "modal", name ].join(" ")
 
+        this.modals[name] = modal
+
         this.render(modal)
         this.gui.node.appendChild(modal.node)
 
-        this.modals[name] = modal
         this.modalsIndex.push(name)
 
         this.reindex()
@@ -127,10 +128,10 @@ export default class {
         if ( item ) {
             this.gui.modelLoader.load(item.model, this.renderEquipmentCell.bind(this, name, cell))
         } else {
-            if ( name == "Vest" ) {
-                return // do not add empty Vest cell
+            if ( name == "Chest" ) {
+                return // do not add empty Chest cell
             } else if ( name == "Shirt" ) {
-                if ( !this.gui.dataLayer.getEquipmentItem("Vest") ) {
+                if ( !this.gui.dataLayer.getEquipmentItem("Chest") ) {
                     cell.textContent = "Chest"
                 }
             } else {
@@ -144,18 +145,20 @@ export default class {
     }
 
     renderEquipmentCell(name, cell, model) {
+        const modal = this.modals.Equipment
+        if ( !modal ) { return }
+
         const item = this.gui.dataLayer.getEquipmentItem(name)
 
         cell.className += " model-" + item.model + " pointer"
-        cell.innerHTML = model.svg
+        cell.appendChild(model.svgNode.cloneNode(true))
 
-        this.colorItemCell(item, cell)
+        this.applyLook(item, cell)
 
-        if ( (name=="Vest" && this.gui.dataLayer.getEquipmentItem("Shirt"))
-            || (name=="Shirt" && this.gui.dataLayer.getEquipmentItem("Vest"))
+        if ( (name=="Chest" && this.gui.dataLayer.getEquipmentItem("Shirt"))
+            || (name=="Shirt" && this.gui.dataLayer.getEquipmentItem("Chest"))
         ) {
-            let node = this.modals.Equipment.cells.Vest
-                && this.modals.Equipment.cells.Vest.querySelector("._back")
+            let node = modal.cells.Chest && modal.cells.Chest.querySelector("._back")
 
             if ( node ) {
                 node.style.fill = "none"
@@ -165,17 +168,17 @@ export default class {
         evl(cell, "click", this.unequip.bind(this, name))
     }
 
-    colorItemCell(item, cell) {
-        if ( item.style ) {
-            for ( let className in item.style ) {
-                let node = cell.querySelector("." + className)
+    applyLook(item, cell) {
+        if ( !item.look ) { return }
 
-                if ( node ) {
-                    let props = item.style[className]
+        for ( let className in item.look ) {
+            let node = cell.querySelector("." + className)
 
-                    for ( let prop in props ) {
-                        node.style[prop] = props[prop]
-                    }
+            if ( node ) {
+                let props = item.look[className]
+
+                for ( let prop in props ) {
+                    node.style[prop] = props[prop]
                 }
             }
         }
@@ -191,14 +194,15 @@ export default class {
 
     reRenderEquipmentCell(name) {
         const modal = this.modals.Equipment
-        const cell = modal && modal.cells[name]
+        if ( !modal ) { return }
 
+        const cell = modal.cells[name]
         if ( !cell ) { return }
 
         cell.remove()
         this.renderBodyEquipmentCell(modal, name)
 
-        if ( name == "Vest" ) {
+        if ( name == "Chest" ) {
             this.reRenderEquipmentCell("Shirt")
         }
     }
@@ -224,9 +228,9 @@ export default class {
 
     renderInventoryItem(cell, item, model) {
         cell.className += " model-" + item.model + " pointer"
-        cell.innerHTML = model.svg
+        cell.appendChild(model.svgNode.cloneNode(true))
 
-        this.colorItemCell(item, cell)
+        this.applyLook(item, cell)
 
         evl(cell, "click", this.inventoryItemOnClick.bind(this, item))
     }
@@ -241,7 +245,6 @@ export default class {
 
     reRenderInventory() {
         const modal = this.modals.Inventory
-
         if ( !modal ) { return }
 
         purge(modal.body)

@@ -1,47 +1,57 @@
 //
 
 export default class {
-    constructor(data) {
+    constructor(data = {}) {
         this.data = data
     }
 
+    setCurrentPlayer(playerId) {
+        this.currentPlayer = this.data.players[playerId]
+    }
+
+    getPlayerEquipment(playerId) {
+        const player = this.data.players[playerId]
+
+        return player && player.equipment
+    }
+
     getEquipmentItem(name) {
-        return this.data.currentPlayer.equipment[name]
+        return this.currentPlayer.equipment[name]
     }
 
     removeEquippedItem(name) {
         const item = this.getEquipmentItem(name)
 
         if ( item ) {
-            this.data.currentPlayer.equipment[name] = null
+            this.currentPlayer.equipment[name] = null
             return item
         }
     }
 
     getInventoryItemIndex(item) {
-        return this.data.currentPlayer.inventory.items.indexOf(item)
+        return this.currentPlayer.inventory.items.indexOf(item)
     }
 
     removeItemFromInventory(item) {
         const itemIndex = this.getInventoryItemIndex(item)
 
         if ( itemIndex > -1 ) {
-            this.data.currentPlayer.inventory.items.splice(itemIndex, 1)
+            this.currentPlayer.inventory.items.splice(itemIndex, 1)
             return item
         }
     }
 
     getInventorySize() {
-        return this.data.currentPlayer.inventory.size
+        return this.currentPlayer.inventory.size
     }
 
     getInventoryItem(index) {
-        return this.data.currentPlayer.inventory.items[index]
+        return this.currentPlayer.inventory.items[index]
     }
 
     isInventoryFull() {
-        return this.data.currentPlayer.inventory.items.length
-            >= this.data.currentPlayer.inventory.size
+        return this.currentPlayer.inventory.items.length
+            >= this.currentPlayer.inventory.size
     }
 
     unequip(name) {
@@ -75,7 +85,7 @@ export default class {
         item = this.removeItemFromInventory(item)
         if ( !item ) { return } // item is not in inventory
 
-        this.data.currentPlayer.equipment[slotName] = item
+        this.currentPlayer.equipment[slotName] = item
 
         this.gui.modals.reRenderEquipmentCell(slotName)
         this.gui.modals.reRenderInventory()
@@ -85,14 +95,14 @@ export default class {
 
     putItemInInventoryRaw(item, beforeIndex = -1) {
         if ( beforeIndex > -1 ) {
-            this.data.currentPlayer.inventory.items.splice(beforeIndex, 0, item)
+            this.currentPlayer.inventory.items.splice(beforeIndex, 0, item)
         } else {
-            this.data.currentPlayer.inventory.items.push(item)
+            this.currentPlayer.inventory.items.push(item)
         }
     }
 
     putItemInInventory(item) {
-        this.data.currentPlayer.inventory.items.push(item)
+        this.currentPlayer.inventory.items.push(item)
 
         this.gui.modals.reRenderInventory()
     }

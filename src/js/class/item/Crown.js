@@ -3,13 +3,15 @@
 import Item from "class/Item"
 
 const MODEL = "Crown"
+const EQUIP = "Helm"
 const WIDTH = 25
 
 export default class extends Item {
-    constructor(props) {
+    constructor(props = {}) {
         super(props)
 
         this.model = this.validateModelName(props.model || MODEL)
+        this.equip = props.equip || EQUIP
 
         this.basicMulZ = 4
 

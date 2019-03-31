@@ -19,3 +19,7 @@ export function purge(node) {
         node.removeChild(first)
     }
 }
+
+export function svg() {
+    return document.createElementNS("http://www.w3.org/2000/svg", "svg")
+}

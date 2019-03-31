@@ -48,7 +48,7 @@ export default {
     },
     Pants: {
         url: require("../../img/model/item/Pants.svg"),
-        whf: 303 / 681,
+        whf: 303 / 713,
         bgX: 0,
         bgY: .45,
     },
