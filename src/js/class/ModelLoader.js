@@ -46,7 +46,7 @@ export default class {
         if ( model.svgNode ) {
             model.svgNodeWear = model.svgNode.cloneNode(true)
             model.svgNodeWear
-                .querySelectorAll("._back, ._back2, ._back3")
+                .querySelectorAll("._back, ._back2")
                 .forEach(node => node.remove())
         }
 

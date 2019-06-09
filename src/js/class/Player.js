@@ -14,8 +14,8 @@ const WEAR_SLOT_Z_INDEX = {
     Shirt: 4,
     Chest: 5,
     Helm: 6,
-    Bands: 7,
     Sword: 8,
+    Bands: 7,
     Shield: 9,
 }
 
@@ -35,6 +35,15 @@ export default class extends Unit {
         this.classes.push("Player", "model-" + this.model)
     }
 
+    getWearItemFullModelName(item) {
+        const suffix = this.getModelSuffix()
+        const modelName = item.model + suffix
+
+        return this.scene.game.modelLoader.getModelByName(modelName)
+            ? modelName
+            : item.model
+    }
+
     applyEquipment() {
         const equipment = this.scene.game.dataLayer.getPlayerEquipment(this.id)
 
@@ -42,8 +51,8 @@ export default class extends Unit {
             let item = equipment[slotName]
 
             if ( item ) {
-                let fullModelName = this.getFullModelName(item.model)
-                this.scene.game.modelLoader.load(fullModelName, this.applyEquipmentItem.bind(this, item, slotName))
+                this.scene.game.modelLoader.load(this.getWearItemFullModelName(item),
+                    this.applyEquipmentItem.bind(this, item, slotName))
             }
         }
 
@@ -54,7 +63,6 @@ export default class extends Unit {
     applyEquipmentItem(item, slotName, model) {
         const node = model.svgNodeWear.cloneNode(true)
 
-        node.style.zIndex = WEAR_SLOT_Z_INDEX[slotName] || 1
         node.setAttribute("class", `wear ${slotName} model-${item.model}`)
 
         if ( item.model == "Pants" ) {
@@ -72,8 +80,8 @@ export default class extends Unit {
         if ( node ) node.remove()
 
         if ( item ) {
-            let fullModelName = this.getFullModelName(item.model)
-            this.scene.game.modelLoader.load(fullModelName, this.applyEquipmentItem.bind(this, item, slotName))
+            this.scene.game.modelLoader.load(this.getWearItemFullModelName(item),
+                this.applyEquipmentItem.bind(this, item, slotName))
         }
 
         this.checkPanties()
@@ -88,8 +96,7 @@ export default class extends Unit {
         const node = this.bg.node.querySelector(`.wear.Pants.model-Pants`)
         if ( !node ) { return }
 
-        const fullModelName = this.getFullModelName(item.model)
-        const model = this.scene.game.modelLoader.getModelByName(fullModelName)
+        const model = this.scene.game.modelLoader.getModelByName(this.getWearItemFullModelName(item))
         if ( !model || !model.loaded ) { return }
 
         const boots = this.scene.game.dataLayer.getEquipmentItem("Boots")
@@ -117,10 +124,5 @@ export default class extends Unit {
         } else {
             panties.style.fill = this.panties.color || "#ddd" // TODO: get color from model
         }
-    }
-
-    getFullModelName(modelName) {
-        // if ( this.angle == "lol" ) { "kek" }
-        return modelName
     }
 }

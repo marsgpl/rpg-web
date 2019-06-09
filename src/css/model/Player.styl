@@ -25,62 +25,157 @@
             &.w
             &.ne
             &.nw
-                svg:first-child
-                    left 34%
-                    height 94%
-            &.n
-                svg:first-child
-                    top 1.34%
-            &.s
-            &.se
-            &.sw
                 >svg
+                    &:first-child
+                        z-index 1
+                        left 34%
+                        height 94%
                     &.model-Pants
+                        z-index 2
+                        top: 39%;
+                        margin-left: -16.5%;
+                        width: 43%;
+                    &.model-Boots
+                        z-index: 3;
+                        top: 78%;
+                        margin-left: -16%;
+                        width: 50%;
+                    &.model-Jacket
+                        z-index: 4
+                        top 13%
+                        margin-left -19%
+                        width 47%
+            &.n
+                >svg
+                    &:first-child
+                        z-index 2
+                        top 1.34%
+                    &.model-Pants
+                        z-index 3
                         top 42%
-                        margin-left -26%
+                        margin-left -26.6%
                         width 55%
                     &.model-Boots
-                        top 75%
-                        margin-left -40%
-                        width 70%
+                        z-index 4
+                        top: 77%;
+                        margin-left: -27%;
+                        width: 54%;
                     &.model-Shirt
+                        z-index 5
                         top 14.2%
                         margin-left -50%
                         width 102%
                     &.model-Jacket
+                        z-index 6
                         top 14%
                         margin-left -48%
                         width 96%
                     &.model-Vest
+                        z-index 6
                         top 14%
                         margin-left -48%
                         width 96%
                     &.model-Crown
+                        z-index 7
+                        top -5.1%
+                        margin-left -18%
+                        width 36%
+                        ._stone
+                            display none
+                    &.model-Helm
+                        z-index 7
+                        top -0.7%
+                        margin-left -14%
+                        width 28%
+                        ._bird
+                            display none
+                    &.model-Bands
+                        z-index 8
+                        top 36%
+                        margin-left -50%
+                        width 102%
+                    &.model-Sword
+                        z-index 1
+                        top 42%
+                        margin-left 0%
+                        width 25%
+                        transform rotate(243deg) skew(24deg, 10deg)
+            &.s
+            &.se
+            &.sw
+                >svg
+                    &:first-child
+                        z-index 1
+                    &.model-Pants
+                        z-index 2
+                        top 42%
+                        margin-left -26.6%
+                        width 55%
+                    &.model-Boots
+                        z-index 3
+                        top 75%
+                        margin-left -40%
+                        width 70%
+                    &.model-Shirt
+                        z-index 4
+                        top 14.2%
+                        margin-left -50%
+                        width 102%
+                    &.model-Jacket
+                        z-index 5
+                        top 14%
+                        margin-left -48%
+                        width 96%
+                    &.model-Vest
+                        z-index 5
+                        top 14%
+                        margin-left -48%
+                        width 96%
+                    &.model-Crown
+                        z-index 6
                         top -5.1%
                         margin-left -18%
                         width 36%
                     &.model-Helm
+                        z-index 6
                         top -0.7%
                         margin-left -14%
                         width 28%
                     &.model-Bands
+                        z-index 7
                         top 36%
                         margin-left -50%
                         width 102%
                     &.model-Shield
+                        z-index 8
                         top 23%
                         margin-left -5%
                         width 83%
                         transform rotate(-13deg) skew(-4deg, -10deg)
                     &.model-ShieldRound
+                        z-index 8
                         top 27%
                         margin-left -10%
                         width 92%
                         transform rotate(-48deg) skew(-8deg, -7deg)
                     &.model-Sword
+                        z-index 9
                         top 41%
                         margin-left -33%
                         width 25%
                         transform rotate(129deg) skew(-24deg, -4deg)
                         ._handle
                             display none
+            &.se
+                >svg
+                    &.model-Vest
+                        transform scale(-1,1)
+                    &.model-Sword
+                        transform rotate(-129deg) skew(24deg, 4deg)
+                        margin-left 10%
+                    &.model-Shield
+                        margin-left -75%
+                        transform rotate(13deg) skew(4deg, 10deg)
+                    &.model-ShieldRound
+                        transform rotate(48deg) skew(8deg, 7deg)
+                        margin-left -80%

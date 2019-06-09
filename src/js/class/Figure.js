@@ -104,14 +104,14 @@ export default class {
         parentNode.appendChild(this.node)
     }
 
-    getCurrentModelName() {
-        const suffix
-            = (this.angle=="n") ? "N"
-            : (this.angle=="w" || this.angle=="e" || this.angle=="nw" || this.angle=="ne") ? "E"
-            : ""
+    getModelSuffix() {
+        return (this.angle=="n") ? "N"
+        : (this.angle=="w" || this.angle=="e" || this.angle=="nw" || this.angle=="ne") ? "E"
+        : ""
+    }
 
-        const modelName = this.model + suffix
-
+    getFullModelName() {
+        const modelName = this.model + this.getModelSuffix()
         return models[modelName] ? modelName : this.model
     }
 
@@ -123,7 +123,7 @@ export default class {
             + (this.pos[1] - this.pos[0]) * this.basicMulZ
             + this.extraZ
 
-        const modelName = this.getCurrentModelName()
+        const modelName = this.getFullModelName()
 
         this.scene.game.modelLoader.load(modelName, this.drawModel)
 

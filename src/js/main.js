@@ -36,7 +36,7 @@ evl(document, "DOMContentLoaded", e => {
                     items: [
                         new Helm,
                         new Vest,
-                        new Rat,
+                        // new Rat,
                         new Sword({
                             look: {
                                 _handle: { fill:"red" },
@@ -54,7 +54,6 @@ evl(document, "DOMContentLoaded", e => {
                             _front: { fill: "#ddd" },
                             _back: { fill: "#aaa" },
                             _back2: { fill: "#ddd" },
-                            _back3: { fill: "#ddd" },
                         },
                     }),
                     Boots: new Boots({
@@ -179,7 +178,6 @@ evl(document, "DOMContentLoaded", e => {
             _front: { fill: "#ddd" },
             _back: { fill: "#aaa" },
             _back2: { fill: "#ddd" },
-            _back3: { fill: "#ddd" },
         },
     })
     const shirt = new Shirt({
